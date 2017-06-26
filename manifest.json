@@ -1,6 +1,6 @@
 {
   "name": "__MSG_appName__",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "manifest_version": 2,
   "description": "__MSG_appDescription__",
   "icons": {
@@ -14,16 +14,9 @@
     ]
   },
   "permissions": [
-    "tabs",
-    "storage",
-    "http://*/*",
-    "https://*/*"
   ],
-  "options_ui": {
-    "page": "options.html"
-  },
   "content_scripts": [
-    {
+      {
       "matches": [
         "http://*/*",
         "https://*/*"
@@ -40,8 +33,7 @@
       "19": "icons/icon-19.png",
       "38": "icons/icon-38.png"
     },
-    "default_title": "Extension Boilerplate",
-    "default_popup": "popup.html"
+    "default_title": "Galaxy Tour Builder"
   }
 }
 
