@@ -1,7 +1,7 @@
 import ext from './utils/ext';
 import storage from './utils/storage';
 import { path as getPath, toggleClass } from './utils/dom';
-import { ACTION_TOGGLE_RECORD } from './actions';
+import { ACTION_ENABLE } from './actions';
 import { createPanel } from './utils/html';
 import GalaxyTour from './tour';
 
@@ -79,7 +79,7 @@ document.querySelector('body').addEventListener('click', event => {
 ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
   let $configurator = document.querySelector('#tour-configurator');
 
-  if (request.action === ACTION_TOGGLE_RECORD) {
+  if (request.action === ACTION_ENABLE) {
     if (request.value === true) {
       storage.get('tour', (res) => {
         if (res.tour) {
@@ -93,6 +93,8 @@ ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         $configurator.querySelector('textarea').value = tour.toYAML();
       });
+    } else {
+      $configurator.parentNode.removeChild($configurator);
     }
   }
 });
