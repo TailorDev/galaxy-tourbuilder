@@ -13,7 +13,10 @@ export const createPanel = () => {
       <button id="tour-update" title="Save the YAML" class="primary">
         Save
       </button>
-      <button id="tour-run">Play ►</button>
+      <button id="tour-record" title="Record steps">
+        Record
+      </button>
+      <button id="tour-run">Play</button>
     </div>
     <textarea wrap="off"></textarea>
   `;

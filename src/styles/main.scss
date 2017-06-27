@@ -17,6 +17,10 @@
             &.primary {
                 @include button($td-green);
             }
+
+            &.recording {
+                @include button($red);
+            }
         }
     }
 

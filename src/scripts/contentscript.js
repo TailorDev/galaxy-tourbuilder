@@ -6,6 +6,7 @@ import { createPanel } from './utils/html';
 import GalaxyTour from './tour';
 
 let tour = new GalaxyTour();
+let recording = false;
 
 document.querySelector('body').addEventListener('click', event => {
   const $configurator = document.querySelector('#tour-configurator');
@@ -26,6 +27,12 @@ document.querySelector('body').addEventListener('click', event => {
   if ('tour-update' === event.target.id) {
     tour.fromYAML($configurator.querySelector('textarea').value);
     storage.set({ tour: tour.toYAML() }, () => {});
+    return;
+  }
+
+  if ('tour-record' === event.target.id) {
+    toggleClass(document.querySelector('#tour-record'), 'recording');
+    recording = !recording;
     return;
   }
 
@@ -71,6 +78,7 @@ document.querySelector('body').addEventListener('click', event => {
   const path = getPath(event.target, document.origin);
 
   if (
+    !recording ||
     path === '' ||
     /(tour-configurator|popover-|tour-|uid)/.test(path) ||
     // exclude menu sections
