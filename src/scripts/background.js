@@ -1,7 +1,7 @@
 import ext from './utils/ext';
 import { ACTION_ENABLE } from './actions';
 
-let isActive = false;
+let isActive = [];
 
 const toggle = (active, callback) => {
   ext.tabs.query({ active: true, currentWindow: true }, tabs => {
@@ -35,15 +35,15 @@ const run = (active, tabId) => {
     });
   }
 
-  isActive = !active;
+  isActive[tabId] = !active;
 };
 
 ext.tabs.onUpdated.addListener((tabId , info) => {
   if (info.status === 'complete') {
-    run(!isActive, tabId);
+    run(!isActive[tabId], tabId);
   }
 });
 
 ext.browserAction.onClicked.addListener((tab) => {
-  run(isActive, tab.id);
+  run(isActive[tab.id] || false, tab.id);
 });
