@@ -5,7 +5,10 @@
   </h1>
 
   <p>
-    <strong>The amazing Galaxy Tour Builder web extension.</strong>
+    <strong>The amazing Galaxy Tour Builder web extension.
+  </p>
+  <p>
+    Check out the video: <a href="https://imgur.com/a/0YVvz">https://imgur.com/a/0YVvz</a>.</strong>
   </p>
   <p>
     <img src="res/screenshot.png">
