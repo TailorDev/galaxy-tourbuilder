@@ -1,5 +1,13 @@
-galaxy-tourbuilder
-==================
+<div align="center">
+  <h1>
+    <img src="./src/icons/icon-19.png" alt="Galaxy Logo">
+    galaxy-tourbuilder
+  </h1>
+
+  <p>
+    <strong>The amazing Galaxy Tour Builder web extension.</strong>
+  </p>
+</div>
 
 ## Installation
 
@@ -33,6 +41,17 @@ and want to enable live reload -
 
 Run `npm run dist` to create a zipped, production-ready extension for each
 browser. You can then upload that to the appstore.
+
+## Credits
+
+This project has been initiated during a hackathon a while ago in Freiburg, then
+[Dannon Baker](https://github.com/dannon) started a Chrome extension
+[port](https://github.com/dannon/tourbuilder). In no particular order, [Florian
+Eggenhofer](https://github.com/eggzilla), [Matthias
+Bernt](https://github.com/bernt-matthias), [Bérénice
+Batut](https://github.com/bebatut) and [Clemens
+Blank](https://github.com/blankclemens) have contributed to this port and
+therefore to this project.
 
 ## License
 
