@@ -23,15 +23,35 @@ document.querySelector('body').addEventListener('click', event => {
 
   if ('tour-run' === event.target.id) {
     const script = document.createElement('script');
-    const name = `tour_${new Date().getTime()}`;
+    const jsonSteps = JSON.stringify(tour.getSteps(), (k, v) => {
+      if (typeof v === 'function') {
+        return `(${v})`;
+      }
+      return v;
+    });
 
     script.textContent = `
-    const ${name} = new window.Tour({
-      steps: ${JSON.stringify(tour.getSteps())},
-    });
-    ${name}.init();
-    ${name}.goTo(0);
-    ${name}.restart();
+    (function () {
+      function parse(obj) {
+        return JSON.parse(obj, (k, v) => {
+          if (typeof v === 'string' && v.indexOf('function') >= 0) {
+            return eval(v);
+          }
+          return v;
+        });
+      }
+
+      var tour = new window.Tour({
+        steps: parse(${JSON.stringify(jsonSteps)}),
+      }, {
+        orphan: true,
+        delay: 150,
+      });
+
+      tour.init();
+      tour.goTo(0);
+      tour.restart();
+    })(window);
     `;
 
     (document.head || document.documentElement).appendChild(script);
