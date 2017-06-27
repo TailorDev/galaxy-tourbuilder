@@ -15,7 +15,7 @@ export const createPanel = () => {
       </button>
       <button id="tour-run">Play ►</button>
     </div>
-    <textarea></textarea>
+    <textarea wrap="off"></textarea>
   `;
 
   return panel;
