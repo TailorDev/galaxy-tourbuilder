@@ -5,7 +5,7 @@
   </h1>
 
   <p>
-    <strong>The amazing Galaxy Tour Builder web extension.
+    <strong>The amazing Galaxy Tour Builder web extension.</strong>
   </p>
   <p>
     Check out the video: <a href="https://imgur.com/a/0YVvz">https://imgur.com/a/0YVvz</a>.</strong>
