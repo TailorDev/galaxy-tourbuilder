@@ -100,7 +100,7 @@ ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         $configurator.querySelector('textarea').value = tour.toYAML();
       });
-    } else {
+    } else if ($configurator) {
       $configurator.parentNode.removeChild($configurator);
     }
   }
