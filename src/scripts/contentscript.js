@@ -1,5 +1,5 @@
-import cssPath from 'css-path';
 import ext from './utils/ext';
+import { path as getPath } from './utils/dom';
 import { ACTION_TOGGLE_RECORD } from './actions';
 import { createPanel } from './utils/html';
 import GalaxyTour from './tour';
@@ -40,7 +40,7 @@ document.querySelector('body').addEventListener('click', event => {
     return;
   }
 
-  const path = cssPath(event.target);
+  const path = getPath(event.target, document.origin);
 
   if (
     path === '' ||

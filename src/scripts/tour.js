@@ -29,11 +29,7 @@ class GalaxyTour {
 
     const preclick = [];
     if (/toolTitle/.test(path)) {
-      const link = document.querySelector(path).querySelector('a');
-
-      if (link) {
-        preclick.push(`a[href$="${link.href}"]`);
-      }
+      preclick.push(path);
     }
 
     this.steps.push({
