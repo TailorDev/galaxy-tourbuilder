@@ -7,6 +7,9 @@
   <p>
     <strong>The amazing Galaxy Tour Builder web extension.</strong>
   </p>
+  <p>
+    <img src="res/screenshot.png">
+  <p>
 </div>
 
 ## Installation
