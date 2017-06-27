@@ -1,5 +1,5 @@
 import ext from './utils/ext';
-import { path as getPath } from './utils/dom';
+import { path as getPath, toggleClass } from './utils/dom';
 import { ACTION_TOGGLE_RECORD } from './actions';
 import { createPanel } from './utils/html';
 import GalaxyTour from './tour';
@@ -10,9 +10,7 @@ document.querySelector('body').addEventListener('click', event => {
   const $configurator = document.querySelector('#tour-configurator');
 
   if ('tour-toggle' === event.target.id) {
-    const h = getComputedStyle($configurator)['height'];
-    $configurator.style.height = '0px' === h ? '200px' : '0px';
-
+    toggleClass($configurator, 'hidden');
     return;
   }
 

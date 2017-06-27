@@ -1,0 +1,41 @@
+@import 'settings';
+@import 'mixins';
+
+#tour-configurator {
+    position: absolute;
+    bottom: 40px;
+    height: 200px;
+    width: 100%;
+    z-index: 1000;
+
+    .actions {
+        padding: 5px;
+
+        button {
+            @include button($td-blue);
+        }
+    }
+
+    &.hidden {
+        height: 0px;
+    }
+
+    textarea {
+        width: 100%;
+        height: 100%;
+
+        background: #fff url('chrome-extension://__MSG_@@extension_id__/images/gutter.png');
+        background-attachment: local;
+        background-repeat: no-repeat;
+        padding-left: 35px;
+        padding-top: 10px;
+
+        outline: none;
+        resize: none;
+
+        font-family: Consolas, monaco, monospace;
+        font-size: 12px;
+        padding-top: 13px;
+        line-height: 16px;
+    }
+}

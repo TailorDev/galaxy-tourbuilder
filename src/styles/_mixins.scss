@@ -1,0 +1,17 @@
+@mixin button($bg) {
+    padding:5px 10px;
+
+    color:white;
+    background-color: $bg;
+    text-decoration:none;
+    border-radius:3px;
+
+    &:hover {
+        background:darken($bg, 8%);
+        transition: all 0.3s ease;
+    }
+
+    &:active {
+        background:darken($bg, 25%);
+    }
+}

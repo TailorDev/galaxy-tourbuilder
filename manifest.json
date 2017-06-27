@@ -25,8 +25,14 @@
       "js": [
         "scripts/contentscript.js"
       ],
+      "css": [
+        "styles/main.css"
+      ],
       "run_at": "document_end"
     }
+  ],
+  "web_accessible_resources": [
+    "images/gutter.png"
   ],
   "browser_action": {
     "default_icon": {
