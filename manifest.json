@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "manifest_version": 2,
   "description": "__MSG_appDescription__",
+  "homepage_url": "https://github.com/TailorDev/galaxy-tourbuilder",
   "icons": {
     "16": "icons/icon-16.png",
     "128": "icons/icon-128.png"
