@@ -18,19 +18,21 @@ const run = (active, tabId) => {
   if (active) {
     toggle(false, () => {
       ext.browserAction.setIcon({
-        tabId: tabId, path: {
-          "19": "icons/disabled/icon-19.png",
-          "38": "icons/disabled/icon-38.png"
-        }
+        tabId: tabId,
+        path: {
+          '19': 'icons/disabled/icon-19.png',
+          '38': 'icons/disabled/icon-38.png',
+        },
       });
     });
   } else {
     toggle(true, () => {
       ext.browserAction.setIcon({
-        tabId: tabId, path: {
-          "19": "icons/icon-19.png",
-          "38": "icons/icon-38.png"
-        }
+        tabId: tabId,
+        path: {
+          '19': 'icons/icon-19.png',
+          '38': 'icons/icon-38.png',
+        },
       });
     });
   }
@@ -38,12 +40,12 @@ const run = (active, tabId) => {
   isActive[tabId] = !active;
 };
 
-ext.tabs.onUpdated.addListener((tabId , info) => {
+ext.tabs.onUpdated.addListener((tabId, info) => {
   if (info.status === 'complete') {
     run(!isActive[tabId], tabId);
   }
 });
 
-ext.browserAction.onClicked.addListener((tab) => {
+ext.browserAction.onClicked.addListener(tab => {
   run(isActive[tab.id] || false, tab.id);
 });

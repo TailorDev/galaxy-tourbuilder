@@ -90,7 +90,7 @@ ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   if (request.action === ACTION_ENABLE) {
     if (request.value === true) {
-      storage.get('tour', (res) => {
+      storage.get('tour', res => {
         if (res.tour) {
           tour.fromYAML(res.tour);
         }

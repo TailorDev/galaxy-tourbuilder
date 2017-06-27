@@ -4,7 +4,8 @@ class GalaxyTour {
   constructor() {
     this.id = 'new-tour';
     this.name = 'Galaxy Tour';
-    this.description = 'This is a new tour created with the Galaxy Tour Builder extension.';
+    this.description =
+      'This is a new tour created with the Galaxy Tour Builder extension.';
     this.title_default = 'Galaxy Tour';
 
     this.steps = [];
@@ -74,7 +75,7 @@ class GalaxyTour {
         // we use $ (jQuery) because this will be injected into Galaxy
         // cf. contentscript.js code (run)
         step.onShown = function() {
-          $(this.element).val(this.textinsert).trigger("change");
+          $(this.element).val(this.textinsert).trigger('change');
         };
       }
 
