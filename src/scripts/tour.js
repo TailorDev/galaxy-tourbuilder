@@ -3,9 +3,9 @@ import yaml from 'js-yaml';
 class GalaxyTour {
   constructor() {
     this.id = 'new-tour';
-    this.name = 'New Tour';
-    this.description = 'Hello, this is a new tour!';
-    this.title_default = 'New Tour';
+    this.name = 'Galaxy Tour';
+    this.description = 'This is a new tour created with the Galaxy Tour Builder extension.';
+    this.title_default = 'Galaxy Tour';
 
     this.steps = [];
   }
@@ -20,7 +20,7 @@ class GalaxyTour {
     const data = yaml.load(content);
 
     ['id', 'name', 'description', 'title_default', 'steps'].forEach(prop => {
-      this[prop] = data[prop];
+      this[prop] = data[prop] || '';
     });
   }
 
@@ -45,7 +45,7 @@ class GalaxyTour {
     });
   }
 
-  getSteps() {
+  getStepsForInjection() {
     // mimic Galaxy, not exhaustive yet
     const steps = this.steps.map(s => {
       const step = Object.assign({}, s);

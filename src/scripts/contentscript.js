@@ -1,10 +1,11 @@
 import ext from './utils/ext';
+import storage from './utils/storage';
 import { path as getPath, toggleClass } from './utils/dom';
 import { ACTION_TOGGLE_RECORD } from './actions';
 import { createPanel } from './utils/html';
 import GalaxyTour from './tour';
 
-let tour = new GalaxyTour();
+const tour = new GalaxyTour();
 
 document.querySelector('body').addEventListener('click', event => {
   const $configurator = document.querySelector('#tour-configurator');
@@ -16,12 +17,14 @@ document.querySelector('body').addEventListener('click', event => {
 
   if ('tour-update' === event.target.id) {
     tour.fromYAML($configurator.querySelector('textarea').value);
+    storage.set({ tour: tour.toYAML() });
+
     return;
   }
 
   if ('tour-run' === event.target.id) {
     const script = document.createElement('script');
-    const jsonSteps = JSON.stringify(tour.getSteps(), (k, v) => {
+    const jsonSteps = JSON.stringify(tour.getStepsForInjection(), (k, v) => {
       if (typeof v === 'function') {
         return `(${v})`;
       }
@@ -78,12 +81,18 @@ ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   if (request.action === ACTION_TOGGLE_RECORD) {
     if (request.value === true) {
-      if (!$configurator) {
-        document.body.appendChild(createPanel());
-        $configurator = document.querySelector('#tour-configurator');
-      }
+      storage.get('tour', (res) => {
+        if (res.tour) {
+          tour.fromYAML(res.tour);
+        }
 
-      $configurator.querySelector('textarea').value = tour.toYAML();
+        if (!$configurator) {
+          document.body.appendChild(createPanel());
+          $configurator = document.querySelector('#tour-configurator');
+        }
+
+        $configurator.querySelector('textarea').value = tour.toYAML();
+      });
     }
   }
 });
