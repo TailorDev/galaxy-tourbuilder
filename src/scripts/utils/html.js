@@ -7,7 +7,10 @@ export const createPanel = () => {
       <button id="tour-toggle" title="Toggle the tour editor">
         Toggle
       </button>
-      <button id="tour-update" title="Save the YAML">
+      <button id="tour-reset" title="Start a new tour">
+        Reset
+      </button>
+      <button id="tour-update" title="Save the YAML" class="primary">
         Save
       </button>
       <button id="tour-run">Play ►</button>

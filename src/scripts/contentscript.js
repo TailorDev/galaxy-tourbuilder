@@ -5,7 +5,7 @@ import { ACTION_ENABLE } from './actions';
 import { createPanel } from './utils/html';
 import GalaxyTour from './tour';
 
-const tour = new GalaxyTour();
+let tour = new GalaxyTour();
 
 document.querySelector('body').addEventListener('click', event => {
   const $configurator = document.querySelector('#tour-configurator');
@@ -15,10 +15,17 @@ document.querySelector('body').addEventListener('click', event => {
     return;
   }
 
+  if ('tour-reset' === event.target.id) {
+    tour = new GalaxyTour();
+    storage.set({ tour: tour.toYAML() }, () => {
+      $configurator.querySelector('textarea').value = tour.toYAML();
+    });
+    return;
+  }
+
   if ('tour-update' === event.target.id) {
     tour.fromYAML($configurator.querySelector('textarea').value);
     storage.set({ tour: tour.toYAML() });
-
     return;
   }
 
