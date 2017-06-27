@@ -80,7 +80,9 @@ document.querySelector('body').addEventListener('click', event => {
   }
 
   tour.addStep(path);
-  $configurator.querySelector('textarea').value = tour.toYAML();
+  storage.set({ tour: tour.toYAML() }, () => {
+    $configurator.querySelector('textarea').value = tour.toYAML();
+  });
 });
 
 ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
