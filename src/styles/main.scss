@@ -32,7 +32,8 @@
         width: 100%;
         height: 100%;
 
-        background: #fff url('chrome-extension://__MSG_@@extension_id__/images/gutter.png');
+        background-color: #fff;
+        background-image: url('chrome-extension://__MSG_@@extension_id__/images/gutter.png'), url('../images/gutter.png');
         background-attachment: local;
         background-repeat: no-repeat;
         padding-left: 35px;
