@@ -25,7 +25,7 @@ document.querySelector('body').addEventListener('click', event => {
 
   if ('tour-update' === event.target.id) {
     tour.fromYAML($configurator.querySelector('textarea').value);
-    storage.set({ tour: tour.toYAML() });
+    storage.set({ tour: tour.toYAML() }, () => {});
     return;
   }
 
