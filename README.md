@@ -15,6 +15,8 @@
   <p>
 </div>
 
+[![Build Status](https://travis-ci.org/TailorDev/galaxy-tourbuilder.svg?branch=master)](https://travis-ci.org/TailorDev/galaxy-tourbuilder)
+
 ## Installation
 
 1. Clone this repository
