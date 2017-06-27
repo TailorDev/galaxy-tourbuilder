@@ -37,11 +37,11 @@ class GalaxyTour {
       element: path,
       content: '',
       placement: '',
-      intro: '',
       // Note: this is Galaxy specific...
+      intro: '',
       preclick,
       postclick: [],
-      textinsert: null,
+      textinsert: '',
     });
   }
 
@@ -51,28 +51,30 @@ class GalaxyTour {
       const step = Object.assign({}, s);
 
       if (step.preclick) {
+        // we use $ (jQuery) because this will be injected into Galaxy
+        // cf. contentscript.js code (run)
         step.onShow = function() {
           this.preclick.forEach(el => {
-            document.querySelector(el).click();
+            $(el).click();
           });
         };
       }
 
       if (step.postclick) {
+        // we use $ (jQuery) because this will be injected into Galaxy
+        // cf. contentscript.js code (run)
         step.onNext = function() {
           this.postclick.forEach(el => {
-            document.querySelector(el).click();
+            $(el).click();
           });
         };
       }
 
       if (step.textinsert) {
+        // we use $ (jQuery) because this will be injected into Galaxy
+        // cf. contentscript.js code (run)
         step.onShown = function() {
-          const event = document.createEvent('HTMLEvents');
-          event.initEvent('change', true, false);
-
-          document.querySelector(this.element).value = this.textinsert;
-          this.element.dispatchEvent(event);
+          $(this.element).val(this.textinsert).trigger("change");
         };
       }
 

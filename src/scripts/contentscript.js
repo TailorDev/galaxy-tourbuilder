@@ -31,7 +31,7 @@ document.querySelector('body').addEventListener('click', event => {
     });
 
     script.textContent = `
-    (function () {
+    (function (window, $) {
       function parse(obj) {
         return JSON.parse(obj, (k, v) => {
           if (typeof v === 'string' && v.indexOf('function') >= 0) {
@@ -51,7 +51,7 @@ document.querySelector('body').addEventListener('click', event => {
       tour.init();
       tour.goTo(0);
       tour.restart();
-    })(window);
+    })(window, jQuery);
     `;
 
     (document.head || document.documentElement).appendChild(script);
