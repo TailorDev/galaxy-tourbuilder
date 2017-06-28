@@ -9,6 +9,8 @@
   </p>
   <p>
     Check out the video: <a href="https://imgur.com/a/0YVvz">https://imgur.com/a/0YVvz</a>.</strong>
+    <br>
+    Support all Galaxy instances · Record/Pause · Live simulation
   </p>
   <p>
     <img src="res/screenshot.png">
