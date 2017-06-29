@@ -137,7 +137,7 @@ function buildJS(target) {
       entries: 'src/scripts/' + file,
       debug: true
     })
-    .transform('babelify', { presets: ['es2015'] })
+    .transform('babelify')
     .transform(preprocessify, {
       includeExtensions: ['.js'],
       context: context

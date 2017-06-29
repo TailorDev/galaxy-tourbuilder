@@ -1,13 +1,11 @@
-const getElementName = (element, origin) => {
+/* @flow */
+
+const getElementName = (element: Element, origin: string) => {
   if (element.id) {
     return `#${element.id}`;
   }
 
-  if (
-    element.tagName &&
-    element.tagName.toLowerCase() === 'a' &&
-    element.href !== ''
-  ) {
+  if (element instanceof HTMLAnchorElement && element.href !== '') {
     return `a[href$="${element.href.replace(origin, '')}"]`;
   }
 
@@ -18,13 +16,13 @@ const getElementName = (element, origin) => {
   return (element.tagName || '').toLowerCase() || null;
 };
 
-export const path = (element, origin) => {
+export const path = (element: Element, origin: any) => {
   if (element.id) {
     return `#${element.id}`;
   }
 
   const parts = [getElementName(element, origin)];
-  let parent = element.parentNode;
+  let parent: ?Element = element.parentElement;
 
   while (parent) {
     if (parent.id) {
@@ -34,7 +32,7 @@ export const path = (element, origin) => {
 
     const name = getElementName(parent, origin);
 
-    if (/html/i.test(name)) {
+    if (name && /html/i.test(name)) {
       break;
     }
 
@@ -42,13 +40,17 @@ export const path = (element, origin) => {
       parts.push(name);
     }
 
-    parent = parent.parentNode;
+    parent = parent.parentElement;
   }
 
   return parts.reverse().join(' ');
 };
 
-export const toggleClass = (el, className) => {
+export const toggleClass = (el: ?HTMLElement, className: string) => {
+  if (!el) {
+    return;
+  }
+
   if (el.classList) {
     el.classList.toggle(className);
   } else {
@@ -65,7 +67,11 @@ export const toggleClass = (el, className) => {
   }
 };
 
-export const toggleAttribute = (el, attr, value) => {
+export const toggleAttribute = (el: ?HTMLElement, attr: string, value: any) => {
+  if (!el) {
+    return;
+  }
+
   if (el.hasAttribute(attr)) {
     el.removeAttribute(attr);
   } else {
