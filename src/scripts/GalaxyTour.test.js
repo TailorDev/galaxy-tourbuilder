@@ -1,13 +1,13 @@
-import Tour from './tour';
+import GalaxyTour from './GalaxyTour';
 
-describe('Tour', () => {
+describe('GalaxyTour', () => {
   it('can be instantiated', () => {
-    const t = new Tour();
+    const t = new GalaxyTour();
     expect(t.getStepsForInjection()).toHaveLength(0);
   });
 
   it('toYAML()', () => {
-    const t = new Tour();
+    const t = new GalaxyTour();
     expect(t.toYAML()).toContain(`id: new-tour
 name: Galaxy Tour
 description: This is a new tour created with the Galaxy Tour Builder extension.
@@ -16,7 +16,7 @@ steps: []`);
   });
 
   it('fromYAML()', () => {
-    const t = new Tour();
+    const t = new GalaxyTour();
     t.fromYAML(`steps: [ { content: 'hello' } ]`);
 
     const steps = t.getStepsForInjection();
@@ -25,7 +25,7 @@ steps: []`);
   });
 
   it('getStepsForInjection()', () => {
-    const t = new Tour();
+    const t = new GalaxyTour();
     t.fromYAML(`
 title_default: 'default-title'
 steps:

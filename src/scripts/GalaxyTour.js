@@ -1,31 +1,55 @@
+/* @flow */
 import yaml from 'js-yaml';
 
+type TourStep = {
+  title: string,
+  content: string,
+  element?: string,
+  placement?: string,
+  intro?: string,
+  position?: string,
+  preclick?: Array<string>,
+  postclick?: Array<string>,
+  textinsert?: string,
+  orphan?: boolean,
+  onShow?: Function,
+  onNext?: Function,
+  onShown?: Function,
+};
+
 class GalaxyTour {
+  id: string;
+  name: string;
+  description: string;
+  title_default: string;
+  steps: Array<TourStep>;
+
   constructor() {
     this.id = 'new-tour';
     this.name = 'Galaxy Tour';
     this.description =
       'This is a new tour created with the Galaxy Tour Builder extension.';
     this.title_default = 'Galaxy Tour';
-
     this.steps = [];
   }
 
-  toYAML() {
+  toYAML(): string {
     const { id, name, description, title_default, steps } = this;
 
     return yaml.dump({ id, name, description, title_default, steps });
   }
 
-  fromYAML(content) {
+  fromYAML(content: string) {
     const data = yaml.load(content);
 
     ['id', 'name', 'description', 'title_default', 'steps'].forEach(prop => {
-      this[prop] = data[prop] || '';
+      // cf. https://github.com/facebook/flow/issues/103
+      var that: { [key: string]: string } = this;
+      that[prop] = data[prop] || '';
     });
   }
 
-  addStep(path) {
+  addStep(path: string) {
     const id = this.steps.length + 1;
 
     const preclick = [];
@@ -46,16 +70,17 @@ class GalaxyTour {
     });
   }
 
-  getStepsForInjection() {
+  getStepsForInjection(): Array<TourStep> {
     // mimic Galaxy, not exhaustive yet
     const steps = this.steps.map(s => {
-      const step = Object.assign({}, s);
+      const step: TourStep = Object.assign({}, s);
 
       if (step.preclick) {
         // we use $ (jQuery) because this will be injected into Galaxy
         // cf. contentscript.js code (run)
         step.onShow = function() {
           this.preclick.forEach(el => {
+            // $FlowFixMe
             $(el).click();
           });
         };
@@ -66,6 +91,7 @@ class GalaxyTour {
         // cf. contentscript.js code (run)
         step.onNext = function() {
           this.postclick.forEach(el => {
+            // $FlowFixMe
             $(el).click();
           });
         };
@@ -75,6 +101,7 @@ class GalaxyTour {
         // we use $ (jQuery) because this will be injected into Galaxy
         // cf. contentscript.js code (run)
         step.onShown = function() {
+          // $FlowFixMe
           $(this.element).val(this.textinsert).trigger('change');
         };
       }

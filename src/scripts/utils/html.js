@@ -1,3 +1,5 @@
+/* @flow */
+
 export const createPanel = () => {
   const panel = document.createElement('div');
 
@@ -22,4 +24,12 @@ export const createPanel = () => {
   `;
 
   return panel;
+};
+
+export const getEditor = ($configurator: HTMLElement | null): ?HTMLTextAreaElement => {
+  if (!$configurator) {
+    return null;
+  }
+
+  return (($configurator.querySelector('textarea'): any): ?HTMLTextAreaElement);
 };

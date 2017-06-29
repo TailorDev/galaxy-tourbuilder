@@ -1,48 +1,60 @@
+/* @flow */
 import ext from './utils/ext';
 import storage from './utils/storage';
-import {
-  path as getPath,
-  toggleClass,
-  toggleAttribute,
-} from './utils/dom';
+import { path as getPath, toggleClass, toggleAttribute } from './utils/dom';
 import { ACTION_ENABLE } from './actions';
-import { createPanel } from './utils/html';
-import GalaxyTour from './tour';
+import { createPanel, getEditor } from './utils/html';
+import GalaxyTour from './GalaxyTour';
 
 let currentTour = new GalaxyTour();
 let recording = false;
 
-const newTour = ($configurator) => {
+const newTour = ($configurator: HTMLElement) => {
   return new Promise((res, rej) => {
     const tour = new GalaxyTour();
 
     storage.set({ tour: tour.toYAML() }, () => {
-      $configurator.querySelector('textarea').value = tour.toYAML();
+      const $editor = getEditor($configurator);
+      if ($editor) {
+        $editor.value = tour.toYAML();
+      }
+
       res(tour);
     });
   });
 };
 
-const saveTour = (tour, $configurator) => {
+const saveTour = (tour: GalaxyTour, $configurator: HTMLElement) => {
   return new Promise((res, rej) => {
-    tour.fromYAML($configurator.querySelector('textarea').value);
+    const $editor = getEditor($configurator);
+    if ($editor) {
+      tour.fromYAML($editor.value);
+    }
 
     storage.set({ tour: tour.toYAML() }, res);
   });
 };
 
-const addStepToTour = (tour, path, $configurator) => {
+const addStepToTour = (
+  tour: GalaxyTour,
+  path: string,
+  $configurator: HTMLElement
+) => {
   return new Promise((res, rej) => {
     tour.addStep(path);
 
     storage.set({ tour: tour.toYAML() }, () => {
-      $configurator.querySelector('textarea').value = tour.toYAML();
+      const $editor = getEditor($configurator);
+      if ($editor) {
+        $editor.value = tour.toYAML();
+      }
+
       res(tour);
     });
   });
 };
 
-const runTour = (tour) => {
+const runTour = (tour: GalaxyTour) => {
   const script = document.createElement('script');
   const jsonSteps = JSON.stringify(tour.getStepsForInjection(), (k, v) => {
     if (typeof v === 'function') {
@@ -80,12 +92,15 @@ const runTour = (tour) => {
     })(window, (typeof jQuery === 'undefined' ? null : jQuery));
     `;
 
-  (document.head || document.documentElement).appendChild(script);
+  (document.head || document.documentElement || document).appendChild(script);
   script.remove();
 };
 
-document.querySelector('body').addEventListener('click', event => {
+const onClick: EventListener = (event: Event) => {
   const $configurator = document.querySelector('#tour-configurator');
+  if (!$configurator) {
+    return;
+  }
 
   if ('tour-toggle' === event.target.id) {
     toggleClass($configurator, 'hidden');
@@ -113,10 +128,11 @@ document.querySelector('body').addEventListener('click', event => {
     return runTour(currentTour);
   }
 
-  const path = getPath(event.target, document.origin);
-
+  const $target: HTMLElement = (event.target: any);
+  const path = getPath($target, document.origin || '');
   if (
     !recording ||
+    !path ||
     path === '' ||
     /(tour-configurator|popover-|tour-|uid)/.test(path) ||
     // exclude menu sections
@@ -125,16 +141,15 @@ document.querySelector('body').addEventListener('click', event => {
     return;
   }
 
-  return addStepToTour(currentTour, path, $configurator)
-    .then(updatedTour => {
-      currentTour = updatedTour;
-    });
-});
+  return addStepToTour(currentTour, path, $configurator).then(updatedTour => {
+    currentTour = updatedTour;
+  });
+};
 
 ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  let $configurator = document.querySelector('#tour-configurator');
-
   if (request.action === ACTION_ENABLE) {
+    let $configurator = document.querySelector('#tour-configurator');
+
     if (request.value === true) {
       storage.get('tour', res => {
         if (res.tour) {
@@ -142,14 +157,23 @@ ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
 
         if (!$configurator) {
-          document.body.appendChild(createPanel());
+          document.body && document.body.appendChild(createPanel());
           $configurator = document.querySelector('#tour-configurator');
         }
 
-        $configurator.querySelector('textarea').value = currentTour.toYAML();
+        const $editor = getEditor($configurator);
+        if ($editor) {
+          $editor.value = currentTour.toYAML();
+        }
+
+        document.body && document.body.addEventListener('click', onClick);
       });
-    } else if ($configurator) {
-      $configurator.parentNode.removeChild($configurator);
+    } else {
+      if ($configurator) {
+        $configurator.parentNode &&
+          $configurator.parentNode.removeChild($configurator);
+        document.body && document.body.removeEventListener('click', onClick);
+      }
     }
   }
 });

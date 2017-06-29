@@ -1,0 +1,8 @@
+[ignore]
+.*/gulp-merge-json/test/json/*
+
+[include]
+
+[libs]
+
+[options]
