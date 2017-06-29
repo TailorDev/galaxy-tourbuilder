@@ -1,52 +1,63 @@
 import ext from './utils/ext';
 import storage from './utils/storage';
-import { path as getPath, toggleClass } from './utils/dom';
+import {
+  path as getPath,
+  toggleClass,
+  toggleAttribute,
+} from './utils/dom';
 import { ACTION_ENABLE } from './actions';
 import { createPanel } from './utils/html';
 import GalaxyTour from './tour';
 
-let tour = new GalaxyTour();
+let currentTour = new GalaxyTour();
 let recording = false;
 
-document.querySelector('body').addEventListener('click', event => {
-  const $configurator = document.querySelector('#tour-configurator');
+const newTour = ($configurator) => {
+  return new Promise((res, rej) => {
+    const tour = new GalaxyTour();
 
-  if ('tour-toggle' === event.target.id) {
-    toggleClass($configurator, 'hidden');
-    return;
-  }
-
-  if ('tour-reset' === event.target.id) {
-    tour = new GalaxyTour();
     storage.set({ tour: tour.toYAML() }, () => {
       $configurator.querySelector('textarea').value = tour.toYAML();
+      res(tour);
     });
-    return;
-  }
+  });
+};
 
-  if ('tour-update' === event.target.id) {
+const saveTour = (tour, $configurator) => {
+  return new Promise((res, rej) => {
     tour.fromYAML($configurator.querySelector('textarea').value);
-    storage.set({ tour: tour.toYAML() }, () => {});
-    return;
-  }
 
-  if ('tour-record' === event.target.id) {
-    toggleClass(document.querySelector('#tour-record'), 'recording');
-    recording = !recording;
-    return;
-  }
+    storage.set({ tour: tour.toYAML() }, res);
+  });
+};
 
-  if ('tour-run' === event.target.id) {
-    const script = document.createElement('script');
-    const jsonSteps = JSON.stringify(tour.getStepsForInjection(), (k, v) => {
-      if (typeof v === 'function') {
-        return `(${v})`;
-      }
-      return v;
+const addStepToTour = (tour, path, $configurator) => {
+  return new Promise((res, rej) => {
+    tour.addStep(path);
+
+    storage.set({ tour: tour.toYAML() }, () => {
+      $configurator.querySelector('textarea').value = tour.toYAML();
+      res(tour);
     });
+  });
+};
 
-    script.textContent = `
+const runTour = (tour) => {
+  const script = document.createElement('script');
+  const jsonSteps = JSON.stringify(tour.getStepsForInjection(), (k, v) => {
+    if (typeof v === 'function') {
+      return `(${v})`;
+    }
+    return v;
+  });
+
+  script.textContent = `
     (function (window, $) {
+      if ($ === null || !window.Tour) {
+        alert('It looks like you are not running the Galaxy Tour Builder extension into a Galaxy application, therefore the tour cannot be played.');
+        return;
+      }
+
       function parse(obj) {
         return JSON.parse(obj, (k, v) => {
           if (typeof v === 'string' && v.indexOf('function') >= 0) {
@@ -66,13 +77,40 @@ document.querySelector('body').addEventListener('click', event => {
       tour.init();
       tour.goTo(0);
       tour.restart();
-    })(window, jQuery);
+    })(window, (typeof jQuery === 'undefined' ? null : jQuery));
     `;
 
-    (document.head || document.documentElement).appendChild(script);
-    script.remove();
+  (document.head || document.documentElement).appendChild(script);
+  script.remove();
+};
 
+document.querySelector('body').addEventListener('click', event => {
+  const $configurator = document.querySelector('#tour-configurator');
+
+  if ('tour-toggle' === event.target.id) {
+    toggleClass($configurator, 'hidden');
     return;
+  }
+
+  if ('tour-new' === event.target.id) {
+    return newTour($configurator).then(newTour => {
+      currentTour = newTour;
+    });
+  }
+
+  if ('tour-save' === event.target.id) {
+    return saveTour(currentTour, $configurator);
+  }
+
+  if ('tour-record' === event.target.id) {
+    toggleClass($configurator, 'recording');
+    toggleAttribute($configurator.querySelector('#tour-run'), 'disabled');
+    recording = !recording;
+    return;
+  }
+
+  if ('tour-run' === event.target.id) {
+    return runTour(currentTour);
   }
 
   const path = getPath(event.target, document.origin);
@@ -87,10 +125,10 @@ document.querySelector('body').addEventListener('click', event => {
     return;
   }
 
-  tour.addStep(path);
-  storage.set({ tour: tour.toYAML() }, () => {
-    $configurator.querySelector('textarea').value = tour.toYAML();
-  });
+  return addStepToTour(currentTour, path, $configurator)
+    .then(updatedTour => {
+      currentTour = updatedTour;
+    });
 });
 
 ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -100,7 +138,7 @@ ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.value === true) {
       storage.get('tour', res => {
         if (res.tour) {
-          tour.fromYAML(res.tour);
+          currentTour.fromYAML(res.tour);
         }
 
         if (!$configurator) {
@@ -108,7 +146,7 @@ ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
           $configurator = document.querySelector('#tour-configurator');
         }
 
-        $configurator.querySelector('textarea').value = tour.toYAML();
+        $configurator.querySelector('textarea').value = currentTour.toYAML();
       });
     } else if ($configurator) {
       $configurator.parentNode.removeChild($configurator);

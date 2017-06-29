@@ -15,7 +15,7 @@ const getElementName = (element, origin) => {
     return `.${element.className.replace(' ', '.')}`;
   }
 
-  return element.tagName.toLowerCase() || null;
+  return (element.tagName || '').toLowerCase() || null;
 };
 
 export const path = (element, origin) => {
@@ -62,5 +62,13 @@ export const toggleClass = (el, className) => {
     }
 
     el.className = classes.join(' ');
+  }
+};
+
+export const toggleAttribute = (el, attr, value) => {
+  if (el.hasAttribute(attr)) {
+    el.removeAttribute(attr);
+  } else {
+    el.setAttribute(attr, value || attr);
   }
 };
