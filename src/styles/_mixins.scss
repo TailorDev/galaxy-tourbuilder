@@ -5,6 +5,7 @@
     background-color: $bg;
     text-decoration:none;
     border-radius:3px;
+    cursor: pointer;
 
     &:hover {
         background:darken($bg, 8%);
