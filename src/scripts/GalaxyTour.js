@@ -46,7 +46,7 @@ class GalaxyTour {
           // exclude blank attributes to clean YAML
           Object.keys(s).forEach(k => {
             // whitelist attrs we always want
-            if (k === 'content') {
+            if (k === 'content' || k === 'placement') {
               return;
             }
 
@@ -90,7 +90,7 @@ class GalaxyTour {
       title: `Step ${id}`,
       element: path,
       content: '',
-      placement: '',
+      placement: 'right',
       // Note: this is Galaxy specific...
       intro: '',
       preclick: [],

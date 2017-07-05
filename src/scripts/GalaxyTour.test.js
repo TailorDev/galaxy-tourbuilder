@@ -23,6 +23,7 @@ steps:
   - title: Step 1
     element: path
     content: ''
+    placement: right
 `);
   });
 
