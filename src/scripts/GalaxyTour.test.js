@@ -13,6 +13,17 @@ name: Galaxy Tour
 description: This is a new tour created with the Galaxy Tour Builder extension.
 title_default: Galaxy Tour
 steps: []`);
+
+    t.addStep('path');
+    expect(t.toYAML()).toEqual(`id: new-tour
+name: Galaxy Tour
+description: This is a new tour created with the Galaxy Tour Builder extension.
+title_default: Galaxy Tour
+steps:
+  - title: Step 1
+    element: path
+    content: ''
+`);
   });
 
   it('fromYAML()', () => {
