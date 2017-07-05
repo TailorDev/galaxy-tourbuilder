@@ -31,7 +31,11 @@ const saveTour = (tour: GalaxyTour, $configurator: HTMLElement) => {
       tour.fromYAML($editor.value);
     }
 
-    storage.set({ tour: tour.toYAML() }, res);
+    try {
+      storage.set({ tour: tour.toYAML() }, res);
+    } catch (e) {
+      res();
+    }
   });
 };
 
@@ -114,7 +118,12 @@ const onClick: EventListener = (event: Event) => {
   }
 
   if ('tour-save' === event.target.id) {
-    return saveTour(currentTour, $configurator);
+    const $btn = $configurator.querySelector('#tour-save');
+
+    toggleAttribute($btn, 'disabled');
+    return saveTour(currentTour, $configurator).then(() => {
+      toggleAttribute($btn, 'disabled');
+    });
   }
 
   if ('tour-record' === event.target.id) {
