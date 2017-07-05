@@ -35,27 +35,35 @@ class GalaxyTour {
 
   toYAML(): string {
     const { id, name, description, title_default, steps } = this;
-    const obj = Object.assign({}, {
-      id,
-      name,
-      description,
-      title_default,
-      steps: steps.map(s => {
-        // exclude blank attributes to clean YAML
-        Object.keys(s).forEach(k => {
-          // whitelist attrs we always want
-          if (k === 'content') {
-            return;
-          }
+    const obj = Object.assign(
+      {},
+      {
+        id,
+        name,
+        description,
+        title_default,
+        steps: steps.map(s => {
+          // exclude blank attributes to clean YAML
+          Object.keys(s).forEach(k => {
+            // whitelist attrs we always want
+            if (k === 'content') {
+              return;
+            }
 
-          if (s[k] === undefined || s[k] === '' || s[k] === null || s[k].length === 0) {
-            delete s[k];
-          }
-        });
+            if (
+              s[k] === undefined ||
+              s[k] === '' ||
+              s[k] === null ||
+              s[k].length === 0
+            ) {
+              delete s[k];
+            }
+          });
 
-        return s;
-      }),
-    });
+          return s;
+        }),
+      }
+    );
 
     return yaml.dump(obj);
   }
@@ -73,9 +81,9 @@ class GalaxyTour {
   addStep(path: string) {
     const id = this.steps.length + 1;
 
-    const preclick = [];
+    const postclick = [];
     if (/toolTitle/.test(path)) {
-      preclick.push(path);
+      postclick.push(path);
     }
 
     this.steps.push({
@@ -85,8 +93,8 @@ class GalaxyTour {
       placement: '',
       // Note: this is Galaxy specific...
       intro: '',
-      preclick,
-      postclick: [],
+      preclick: [],
+      postclick,
       textinsert: '',
     });
   }
