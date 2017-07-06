@@ -17,6 +17,9 @@ export const createPanel = () => {
       <button id="tour-save" title="Save the YAML" class="primary">
         Save
       </button>
+      <button id="tour-export" title="Export the tour as a YAML file">
+        Export
+      </button>
       <button id="tour-record" title="Record steps">
         Record
       </button>

@@ -1,5 +1,6 @@
 /* @flow */
 import interact from 'interactjs';
+import { saveAs } from 'file-saver';
 import ext from './utils/ext';
 import storage from './utils/storage';
 import { path as getPath, toggleClass, toggleAttribute } from './utils/dom';
@@ -129,8 +130,18 @@ const onClick: EventListener = (event: Event) => {
 
   if ('tour-record' === event.target.id) {
     toggleClass($configurator, 'recording');
-    toggleAttribute($configurator.querySelector('#tour-run'), 'disabled');
+    ['run', 'export', 'new'].forEach(action => {
+      toggleAttribute($configurator.querySelector(`#tour-${action}`), 'disabled');
+    });
     recording = !recording;
+    return;
+  }
+
+  if ('tour-export' === event.target.id) {
+    saveAs(
+      new Blob([currentTour.toYAML()], { type: 'text/vnd.yaml;charset=utf-8' }),
+      `${currentTour.getId()}.yaml`
+    );
     return;
   }
 

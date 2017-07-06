@@ -158,6 +158,10 @@ class GalaxyTour {
 
     return steps;
   }
+
+  getId(): string {
+    return this.id;
+  }
 }
 
 export default GalaxyTour;
