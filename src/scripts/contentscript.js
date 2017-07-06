@@ -131,7 +131,10 @@ const onClick: EventListener = (event: Event) => {
   if ('tour-record' === event.target.id) {
     toggleClass($configurator, 'recording');
     ['run', 'export', 'new'].forEach(action => {
-      toggleAttribute($configurator.querySelector(`#tour-${action}`), 'disabled');
+      toggleAttribute(
+        $configurator.querySelector(`#tour-${action}`),
+        'disabled'
+      );
     });
     recording = !recording;
     return;
@@ -182,19 +185,25 @@ ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
           $configurator = document.querySelector('#tour-configurator');
 
           interact('textarea', { context: $configurator })
-            .resizable({
-              edges: { left: false, right: false, bottom: true, top: true },
+            .resizable({ edges: { top: true } })
+            .on('resizestart', event => {
+              event.target.disabled = true;
             })
-            .on('resizemove', (event) => {
+            .on('resizemove', event => {
               const h = event.rect.height;
-              if (h < (ACTIONS_HEIGHT + 200) || h > window.innerHeight) {
+              if (
+                h < ACTIONS_HEIGHT + 200 ||
+                h > window.innerHeight - ACTIONS_HEIGHT
+              ) {
                 return;
               }
 
               event.target.style.height = `${h - ACTIONS_HEIGHT}px`;
               event.target.parentNode.style.height = `${h}px`;
             })
-          ;
+            .on('resizeend', event => {
+              event.target.disabled = false;
+            });
         }
 
         const $editor = getEditor($configurator);
