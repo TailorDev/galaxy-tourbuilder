@@ -1,5 +1,7 @@
 /* @flow */
 
+export const ACTIONS_HEIGHT = 35;
+
 export const createPanel = () => {
   const panel = document.createElement('div');
 

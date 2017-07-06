@@ -6,12 +6,13 @@ type Tab = {
   id: number,
 };
 
-let isActive: Array<boolean> = [];
+let isActive: { [number]: boolean } = {};
 
 const toggle = (active: boolean, tabId: number, callback: Function) => {
   ext.tabs.sendMessage(
     tabId,
     { action: ACTION_ENABLE, value: active },
+    {},
     callback
   );
 };

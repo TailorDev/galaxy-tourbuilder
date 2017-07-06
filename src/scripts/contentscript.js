@@ -1,9 +1,10 @@
 /* @flow */
+import interact from 'interactjs';
 import ext from './utils/ext';
 import storage from './utils/storage';
 import { path as getPath, toggleClass, toggleAttribute } from './utils/dom';
 import { ACTION_ENABLE } from './actions';
-import { createPanel, getEditor } from './utils/html';
+import { createPanel, getEditor, ACTIONS_HEIGHT } from './utils/html';
 import GalaxyTour from './GalaxyTour';
 
 let currentTour = new GalaxyTour();
@@ -168,6 +169,21 @@ ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if (!$configurator) {
           document.body && document.body.appendChild(createPanel());
           $configurator = document.querySelector('#tour-configurator');
+
+          interact('textarea', { context: $configurator })
+            .resizable({
+              edges: { left: false, right: false, bottom: true, top: true },
+            })
+            .on('resizemove', (event) => {
+              const h = event.rect.height;
+              if (h < (ACTIONS_HEIGHT + 200) || h > window.innerHeight) {
+                return;
+              }
+
+              event.target.style.height = `${h - ACTIONS_HEIGHT}px`;
+              event.target.parentNode.style.height = `${h}px`;
+            })
+          ;
         }
 
         const $editor = getEditor($configurator);
