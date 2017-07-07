@@ -45,10 +45,11 @@ const saveTour = (tour: GalaxyTour, $configurator: HTMLElement) => {
 const addStepToTour = (
   tour: GalaxyTour,
   path: string,
+  placement: string,
   $configurator: HTMLElement
 ) => {
   return new Promise((res, rej) => {
-    tour.addStep(path);
+    tour.addStep(path, placement);
 
     storage.set({ tour: tour.toYAML() }, () => {
       const $editor = getEditor($configurator);
@@ -155,6 +156,7 @@ const onClick: EventListener = (event: Event) => {
 
   const $target: HTMLElement = (event.target: any);
   const path = getPath($target, document.origin || '');
+
   if (
     !recording ||
     !path ||
@@ -166,7 +168,17 @@ const onClick: EventListener = (event: Event) => {
     return;
   }
 
-  return addStepToTour(currentTour, path, $configurator).then(updatedTour => {
+  let placement = 'right';
+  if (event instanceof MouseEvent && window.innerWidth / 2 < event.clientX) {
+    placement = 'left';
+  }
+
+  return addStepToTour(
+    currentTour,
+    path,
+    placement,
+    $configurator
+  ).then(updatedTour => {
     currentTour = updatedTour;
   });
 };

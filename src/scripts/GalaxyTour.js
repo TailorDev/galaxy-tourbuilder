@@ -78,7 +78,7 @@ class GalaxyTour {
     });
   }
 
-  addStep(path: string) {
+  addStep(path: string, placement: string) {
     const id = this.steps.length + 1;
 
     let element = path;
@@ -93,7 +93,7 @@ class GalaxyTour {
       title: `Step ${id}`,
       element,
       content: '',
-      placement: 'right',
+      placement: placement || 'right',
       // Note: this is Galaxy specific...
       intro: '',
       preclick: [],
