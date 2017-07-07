@@ -10,7 +10,7 @@ const getElementName = (element: Element, origin: string) => {
   }
 
   if (element.className) {
-    return `.${element.className.replace(' ', '.')}`;
+    return `.${element.className.trim().replace(' ', '.')}`;
   }
 
   return (element.tagName || '').toLowerCase() || null;

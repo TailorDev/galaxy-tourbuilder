@@ -22,6 +22,7 @@ test('utils/dom', () => {
       </a>
       <button type="button" class="ui-button-default btn btn-default" id="btn-new" style="float: right;" data-original-title="" title=""><i class="icon fa fa-edit ui-margin-right"></i><span class="title">Paste/Fetch data</span><div class="progress" style="display: none;"><div class="progress-bar" style="width: 0%;"></div></div></button>
       <button type="button" id="btn-new-without-children">click me</button>
+      <span class="with-extra-space "></span>
     </div>
   `;
 
@@ -41,5 +42,8 @@ test('utils/dom', () => {
   expect(path(document.querySelector('#btn-new .title'))).toEqual('#btn-new');
   expect(path(document.querySelector('#btn-new-without-children'))).toEqual(
     '#btn-new-without-children'
+  );
+  expect(path(document.querySelector('.foo .with-extra-space'))).toEqual(
+    'body .foo .with-extra-space'
   );
 });
