@@ -58,6 +58,12 @@ This extension is available under the name [Galaxy Tour
 Builder](https://chrome.google.com/webstore/detail/galaxy-tour-builder/mdfbapknmcpnbmggahhaegehbbbmhmgg)
 in the Chrome Web Store.
 
+#### Firefox Add-ons
+
+This extension is available under the name [Galaxy Tour
+Builder](https://addons.mozilla.org/en-US/firefox/addon/galaxy-tour-builder/) on
+the Firefox Add-ons website.
+
 ## Credits
 
 This project has been initiated during a hackathon a while ago in Freiburg, then
