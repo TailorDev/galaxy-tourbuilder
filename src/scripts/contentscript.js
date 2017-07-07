@@ -1,6 +1,7 @@
 /* @flow */
 import interact from 'interactjs';
 import { saveAs } from 'file-saver';
+import tabOverride from 'taboverride';
 import ext from './utils/ext';
 import storage from './utils/storage';
 import { path as getPath, toggleClass, toggleAttribute } from './utils/dom';
@@ -204,6 +205,11 @@ ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
             .on('resizeend', event => {
               event.target.disabled = false;
             });
+
+          const $editor = getEditor($configurator);
+          if ($editor) {
+            tabOverride.tabSize(2).autoIndent(true).set($editor);
+          }
         }
 
         const $editor = getEditor($configurator);
