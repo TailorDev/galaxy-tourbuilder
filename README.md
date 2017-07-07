@@ -10,7 +10,7 @@
   <p>
     Check out the video: <a href="https://imgur.com/a/0YVvz">https://imgur.com/a/0YVvz</a>.</strong>
     <br>
-    Support all Galaxy instances · Record/Pause · Live simulation
+    Support all Galaxy instances · Record/Pause · Live simulation · Export
   </p>
   <p>
     <img src="res/screenshot.png">
@@ -51,6 +51,12 @@ and want to enable live reload -
 
 Run `npm run dist` to create a zipped, production-ready extension for each
 browser. You can then upload that to the appstore.
+
+##### Chrome Web Store
+
+This extension is available under the name [Galaxy Tour
+Builder](https://chrome.google.com/webstore/detail/galaxy-tour-builder/mdfbapknmcpnbmggahhaegehbbbmhmgg)
+in the Chrome Web Store.
 
 ## Credits
 
