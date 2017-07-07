@@ -26,6 +26,12 @@ export const path = (element: Element, origin: any) => {
 
   while (parent) {
     if (parent.id) {
+      // buttons usually have children for icon, text, etc., but we are not
+      // interested in them
+      if (parent instanceof HTMLButtonElement) {
+        parts.pop();
+      }
+
       parts.push(`#${parent.id}`);
       break;
     }
