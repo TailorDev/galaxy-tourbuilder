@@ -25,7 +25,10 @@ export const createPanel = () => {
       </button>
       <button id="tour-run">Play</button>
     </div>
-    <textarea wrap="off"></textarea>
+    <div class="resizable-panel">
+      <div class="resizable-panel-grip"></div>
+      <textarea wrap="off"></textarea>
+    </div>
   `;
 
   return panel;

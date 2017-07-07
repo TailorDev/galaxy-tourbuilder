@@ -185,7 +185,7 @@ ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
           document.body && document.body.appendChild(createPanel());
           $configurator = document.querySelector('#tour-configurator');
 
-          interact('textarea', { context: $configurator })
+          interact('.resizable-panel', { context: $configurator })
             .resizable({ edges: { top: true } })
             .on('resizestart', event => {
               event.target.disabled = true;
@@ -193,14 +193,14 @@ ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
             .on('resizemove', event => {
               const h = event.rect.height;
               if (
-                h < ACTIONS_HEIGHT + 200 ||
+                h < ACTIONS_HEIGHT + 100 ||
                 h > window.innerHeight - ACTIONS_HEIGHT
               ) {
                 return;
               }
 
-              event.target.style.height = `${h - ACTIONS_HEIGHT}px`;
-              event.target.parentNode.style.height = `${h}px`;
+              event.target.style.height = `${h}px`;
+              event.target.parentNode.style.height = `${h + ACTIONS_HEIGHT}px`;
             })
             .on('resizeend', event => {
               event.target.disabled = false;

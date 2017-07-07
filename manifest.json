@@ -35,7 +35,8 @@
     }
   ],
   "web_accessible_resources": [
-    "images/gutter.png"
+    "images/gutter.png",
+    "images/grip.png"
   ],
   "browser_action": {
     "default_icon": {
