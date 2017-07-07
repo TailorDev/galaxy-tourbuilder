@@ -5,7 +5,7 @@ export const ACTIONS_HEIGHT = 35;
 export const createPanel = () => {
   const panel = document.createElement('div');
 
-  panel.setAttribute('id', 'tour-configurator');
+  panel.setAttribute('id', 'galaxy-tourbuilder');
   panel.innerHTML = `
     <div class="actions">
       <button id="tour-toggle" title="Toggle the tour editor">

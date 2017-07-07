@@ -105,7 +105,7 @@ const runTour = (tour: GalaxyTour) => {
 };
 
 const onClick: EventListener = (event: Event) => {
-  const $configurator = document.querySelector('#tour-configurator');
+  const $configurator = document.querySelector('#galaxy-tourbuilder');
   if (!$configurator) {
     return;
   }
@@ -161,7 +161,7 @@ const onClick: EventListener = (event: Event) => {
     !recording ||
     !path ||
     path === '' ||
-    /(tour-configurator|popover-|tour-|uid)/.test(path) ||
+    /(galaxy-tourbuilder|popover-|tour-|uid)/.test(path) ||
     // exclude menu sections
     /title_/.test(path)
   ) {
@@ -185,7 +185,7 @@ const onClick: EventListener = (event: Event) => {
 
 ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === ACTION_ENABLE) {
-    let $configurator = document.querySelector('#tour-configurator');
+    let $configurator = document.querySelector('#galaxy-tourbuilder');
 
     if (request.value === true) {
       storage.get('tour', res => {
@@ -195,7 +195,7 @@ ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         if (!$configurator) {
           document.body && document.body.appendChild(createPanel());
-          $configurator = document.querySelector('#tour-configurator');
+          $configurator = document.querySelector('#galaxy-tourbuilder');
 
           interact('.resizable-panel', { context: $configurator })
             .resizable({ edges: { top: true } })
