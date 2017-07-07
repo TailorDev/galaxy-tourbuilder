@@ -216,6 +216,8 @@ ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
             })
             .on('resizeend', event => {
               event.target.disabled = false;
+              // force-stop for Firefox
+              event.interaction.resizing = false;
             });
 
           const $editor = getEditor($configurator);
