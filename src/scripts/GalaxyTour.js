@@ -81,14 +81,17 @@ class GalaxyTour {
   addStep(path: string) {
     const id = this.steps.length + 1;
 
+    let element = path;
     const postclick = [];
+
     if (/toolTitle/.test(path)) {
-      postclick.push(path);
+      element = '#tool-search';
+      postclick.push(path.replace(/.*(\.toolTitle) (.*)+/, '$2'));
     }
 
     this.steps.push({
       title: `Step ${id}`,
-      element: path,
+      element,
       content: '',
       placement: 'right',
       // Note: this is Galaxy specific...
