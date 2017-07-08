@@ -6,12 +6,7 @@ import ext from './utils/ext';
 import storage from './utils/storage';
 import { path as getPath, toggleClass, toggleAttribute } from './utils/dom';
 import { ACTION_ENABLE } from './actions';
-import {
-  createPanel,
-  getEditor,
-  getStatus,
-  ACTIONS_HEIGHT,
-} from './utils/html';
+import * as html from './utils/html';
 import GalaxyTour from './GalaxyTour';
 
 let currentTour = new GalaxyTour();
@@ -19,11 +14,11 @@ let recording = false;
 
 export const syncEditorWithTour = (
   tour: GalaxyTour,
-  $configurator: HTMLElement
+  $panel: HTMLElement
 ): Promise<GalaxyTour> => {
   return new Promise((res, rej) => {
     try {
-      const $editor = getEditor($configurator);
+      const $editor = html.getEditor($panel);
       if ($editor) {
         $editor.value = tour.toYAML();
       }
@@ -37,17 +32,17 @@ export const syncEditorWithTour = (
   });
 };
 
-export const newTour = ($configurator: HTMLElement): Promise<GalaxyTour> => {
-  return syncEditorWithTour(new GalaxyTour(), $configurator);
+export const newTour = ($panel: HTMLElement): Promise<GalaxyTour> => {
+  return syncEditorWithTour(new GalaxyTour(), $panel);
 };
 
 export const saveTour = (
   tour: GalaxyTour,
-  $configurator: HTMLElement
+  $panel: HTMLElement
 ): Promise<GalaxyTour> => {
   return new Promise((res, rej) => {
     try {
-      const $editor = getEditor($configurator);
+      const $editor = html.getEditor($panel);
       if ($editor) {
         tour.fromYAML($editor.value);
       }
@@ -56,22 +51,22 @@ export const saveTour = (
     } catch (e) {
       rej(e);
     }
-  }).then(tour => syncEditorWithTour(tour, $configurator));
+  }).then(tour => syncEditorWithTour(tour, $panel));
 };
 
 export const addStepToTour = (
   tour: GalaxyTour,
   path: string,
   placement: string,
-  $configurator: HTMLElement
+  $panel: HTMLElement
 ): Promise<GalaxyTour> => {
   tour.addStep(path, placement);
 
-  return syncEditorWithTour(tour, $configurator);
+  return syncEditorWithTour(tour, $panel);
 };
 
-export const updateStatus = (message: string, $configurator: HTMLElement) => {
-  const $status = getStatus($configurator);
+export const updateStatus = (message: string, $panel: HTMLElement) => {
+  const $status = html.getStatus($panel);
   if (!$status) {
     return;
   }
@@ -122,52 +117,49 @@ const runTour = (tour: GalaxyTour) => {
 };
 
 const onClick: EventListener = (event: Event) => {
-  const $configurator = document.querySelector('#galaxy-tourbuilder');
-  if (!$configurator) {
+  const $panel = html.getPanel();
+  if (!$panel) {
     return;
   }
 
-  if ('tour-toggle' === event.target.id) {
-    toggleClass($configurator, 'hidden');
+  if (event.target.id === html.BTN_TOGGLE) {
+    toggleClass($panel, 'hidden');
     return;
   }
 
-  if ('tour-new' === event.target.id) {
-    return newTour($configurator)
+  if (event.target.id === html.BTN_NEW) {
+    return newTour($panel)
       .then(newTour => {
-        updateStatus('', $configurator);
+        updateStatus('', $panel);
         currentTour = newTour;
       })
-      .catch(e => updateStatus(`Error: ${e.message || e}`, $configurator));
+      .catch(e => updateStatus(`Error: ${e.message || e}`, $panel));
   }
 
-  if ('tour-save' === event.target.id) {
-    const $btn = $configurator.querySelector('#tour-save');
+  if (event.target.id === html.BTN_SAVE) {
+    const $btn = $panel.querySelector('#tour-save');
 
     toggleAttribute($btn, 'disabled');
-    return saveTour(currentTour, $configurator)
+    return saveTour(currentTour, $panel)
       .then(() => {
-        updateStatus('', $configurator);
+        updateStatus('', $panel);
       })
-      .catch(e => updateStatus(`Error: ${e.message || e}`, $configurator))
+      .catch(e => updateStatus(`Error: ${e.message || e}`, $panel))
       .then(() => {
         toggleAttribute($btn, 'disabled');
       });
   }
 
-  if ('tour-record' === event.target.id) {
-    toggleClass($configurator, 'recording');
+  if (event.target.id === html.BTN_RECORD) {
+    toggleClass($panel, 'recording');
     ['run', 'export', 'new'].forEach(action => {
-      toggleAttribute(
-        $configurator.querySelector(`#tour-${action}`),
-        'disabled'
-      );
+      toggleAttribute($panel.querySelector(`#tour-${action}`), 'disabled');
     });
     recording = !recording;
     return;
   }
 
-  if ('tour-export' === event.target.id) {
+  if (event.target.id === html.BTN_EXPORT) {
     saveAs(
       new Blob([currentTour.toYAML()], { type: 'text/vnd.yaml;charset=utf-8' }),
       `${currentTour.getId()}.yaml`
@@ -175,7 +167,7 @@ const onClick: EventListener = (event: Event) => {
     return;
   }
 
-  if ('tour-run' === event.target.id) {
+  if (event.target.id === html.BTN_PLAY) {
     return runTour(currentTour);
   }
 
@@ -198,17 +190,17 @@ const onClick: EventListener = (event: Event) => {
     placement = 'left';
   }
 
-  return addStepToTour(currentTour, path, placement, $configurator)
+  return addStepToTour(currentTour, path, placement, $panel)
     .then(updatedTour => {
-      updateStatus('', $configurator);
+      updateStatus('', $panel);
       currentTour = updatedTour;
     })
-    .catch(e => updateStatus(`Error: ${e.message || e}`, $configurator));
+    .catch(e => updateStatus(`Error: ${e.message || e}`, $panel));
 };
 
 ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === ACTION_ENABLE) {
-    let $configurator = document.querySelector('#galaxy-tourbuilder');
+    let $panel = html.getPanel();
 
     if (request.value === true) {
       storage.get('tour', res => {
@@ -216,11 +208,11 @@ ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
           currentTour.fromYAML(res.tour);
         }
 
-        if (!$configurator) {
-          document.body && document.body.appendChild(createPanel());
-          $configurator = document.querySelector('#galaxy-tourbuilder');
+        if (!$panel) {
+          document.body && document.body.appendChild(html.createPanel());
+          $panel = ((html.getPanel(): any): HTMLElement);
 
-          interact('.resizable-panel', { context: $configurator })
+          interact('.resizable-panel', { context: $panel })
             .resizable({ edges: { top: true } })
             .on('resizestart', event => {
               event.target.disabled = true;
@@ -228,14 +220,15 @@ ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
             .on('resizemove', event => {
               const h = event.rect.height;
               if (
-                h < ACTIONS_HEIGHT + 100 ||
-                h > window.innerHeight - ACTIONS_HEIGHT
+                h < html.ACTIONS_HEIGHT + 100 ||
+                h > window.innerHeight - html.ACTIONS_HEIGHT
               ) {
                 return;
               }
 
               event.target.style.height = `${h}px`;
-              event.target.parentNode.style.height = `${h + ACTIONS_HEIGHT}px`;
+              event.target.parentNode.style.height = `${h +
+                html.ACTIONS_HEIGHT}px`;
             })
             .on('resizeend', event => {
               event.target.disabled = false;
@@ -243,13 +236,13 @@ ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
               event.interaction.resizing = false;
             });
 
-          const $editor = getEditor($configurator);
+          const $editor = html.getEditor($panel);
           if ($editor) {
             tabOverride.tabSize(2).autoIndent(true).set($editor);
           }
         }
 
-        const $editor = getEditor($configurator);
+        const $editor = html.getEditor($panel);
         if ($editor) {
           $editor.value = currentTour.toYAML();
         }
@@ -257,9 +250,8 @@ ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
         document.body && document.body.addEventListener('click', onClick);
       });
     } else {
-      if ($configurator) {
-        $configurator.parentNode &&
-          $configurator.parentNode.removeChild($configurator);
+      if ($panel) {
+        $panel.parentNode && $panel.parentNode.removeChild($panel);
         document.body && document.body.removeEventListener('click', onClick);
       }
     }

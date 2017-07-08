@@ -1,6 +1,12 @@
 /* @flow */
 
 export const ACTIONS_HEIGHT = 35;
+export const BTN_TOGGLE = 'tour-toggle';
+export const BTN_NEW = 'tour-new';
+export const BTN_SAVE = 'tour-save';
+export const BTN_EXPORT = 'tour-export';
+export const BTN_RECORD = 'tour-record';
+export const BTN_PLAY = 'tour-play';
 
 export const createPanel = () => {
   const panel = document.createElement('div');
@@ -8,22 +14,24 @@ export const createPanel = () => {
   panel.setAttribute('id', 'galaxy-tourbuilder');
   panel.innerHTML = `
     <div class="actions">
-      <button id="tour-toggle" title="Toggle the tour editor">
+      <button id="${BTN_TOGGLE}" title="Toggle this panel">
         Toggle
       </button>
-      <button id="tour-new" title="Start a new tour">
+      <button id="${BTN_NEW}" title="Start a new tour">
         New
       </button>
-      <button id="tour-save" title="Save the YAML" class="primary">
+      <button id="${BTN_SAVE}" title="Save your changes" class="primary">
         Save
       </button>
-      <button id="tour-export" title="Export the tour as a YAML file">
+      <button id="${BTN_EXPORT}" title="Export the current tour as a YAML file">
         Export
       </button>
-      <button id="tour-record" title="Record steps">
+      <button id="${BTN_RECORD}" title="Record new steps">
         Record
       </button>
-      <button id="tour-run">Play</button>
+      <button id="${BTN_PLAY}">
+        Play
+      </button>
     </div>
     <div class="resizable-panel">
       <div class="resizable-panel-grip"></div>
@@ -33,6 +41,10 @@ export const createPanel = () => {
   `;
 
   return panel;
+};
+
+export const getPanel = (): ?HTMLElement => {
+  return document.querySelector('#galaxy-tourbuilder');
 };
 
 export const getEditor = ($configurator: HTMLElement | null): ?HTMLTextAreaElement => {
