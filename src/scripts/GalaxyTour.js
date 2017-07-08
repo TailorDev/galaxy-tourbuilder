@@ -11,6 +11,7 @@ type TourStep = {
   preclick?: Array<string>,
   postclick?: Array<string>,
   textinsert?: string,
+  backdrop?: boolean,
   orphan?: boolean,
   onShow?: Function,
   onNext?: Function,
@@ -73,8 +74,8 @@ class GalaxyTour {
 
     ['id', 'name', 'description', 'title_default', 'steps'].forEach(prop => {
       // cf. https://github.com/facebook/flow/issues/103
-      var that: { [key: string]: string } = this;
-      that[prop] = data[prop] || '';
+      var that: { [key: string]: string | Array<TourStep> } = this;
+      that[prop] = data[prop] || (prop === 'steps' ? [] : '');
     });
   }
 

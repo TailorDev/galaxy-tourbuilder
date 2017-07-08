@@ -6,60 +6,77 @@ import ext from './utils/ext';
 import storage from './utils/storage';
 import { path as getPath, toggleClass, toggleAttribute } from './utils/dom';
 import { ACTION_ENABLE } from './actions';
-import { createPanel, getEditor, ACTIONS_HEIGHT } from './utils/html';
+import {
+  createPanel,
+  getEditor,
+  getStatus,
+  ACTIONS_HEIGHT,
+} from './utils/html';
 import GalaxyTour from './GalaxyTour';
 
 let currentTour = new GalaxyTour();
 let recording = false;
 
-const newTour = ($configurator: HTMLElement) => {
+export const syncEditorWithTour = (
+  tour: GalaxyTour,
+  $configurator: HTMLElement
+): Promise<GalaxyTour> => {
   return new Promise((res, rej) => {
-    const tour = new GalaxyTour();
-
-    storage.set({ tour: tour.toYAML() }, () => {
+    try {
       const $editor = getEditor($configurator);
       if ($editor) {
         $editor.value = tour.toYAML();
       }
 
-      res(tour);
-    });
-  });
-};
-
-const saveTour = (tour: GalaxyTour, $configurator: HTMLElement) => {
-  return new Promise((res, rej) => {
-    const $editor = getEditor($configurator);
-    if ($editor) {
-      tour.fromYAML($editor.value);
-    }
-
-    try {
-      storage.set({ tour: tour.toYAML() }, res);
+      storage.set({ tour: tour.toYAML() }, () => {
+        res(tour);
+      });
     } catch (e) {
-      res();
+      rej(e);
     }
   });
 };
 
-const addStepToTour = (
+export const newTour = ($configurator: HTMLElement): Promise<GalaxyTour> => {
+  return syncEditorWithTour(new GalaxyTour(), $configurator);
+};
+
+export const saveTour = (
+  tour: GalaxyTour,
+  $configurator: HTMLElement
+): Promise<GalaxyTour> => {
+  return new Promise((res, rej) => {
+    try {
+      const $editor = getEditor($configurator);
+      if ($editor) {
+        tour.fromYAML($editor.value);
+      }
+
+      res(tour);
+    } catch (e) {
+      rej(e);
+    }
+  }).then(tour => syncEditorWithTour(tour, $configurator));
+};
+
+export const addStepToTour = (
   tour: GalaxyTour,
   path: string,
   placement: string,
   $configurator: HTMLElement
-) => {
-  return new Promise((res, rej) => {
-    tour.addStep(path, placement);
+): Promise<GalaxyTour> => {
+  tour.addStep(path, placement);
 
-    storage.set({ tour: tour.toYAML() }, () => {
-      const $editor = getEditor($configurator);
-      if ($editor) {
-        $editor.value = tour.toYAML();
-      }
+  return syncEditorWithTour(tour, $configurator);
+};
 
-      res(tour);
-    });
-  });
+export const updateStatus = (message: string, $configurator: HTMLElement) => {
+  const $status = getStatus($configurator);
+  if (!$status) {
+    return;
+  }
+
+  $status.innerHTML = message;
 };
 
 const runTour = (tour: GalaxyTour) => {
@@ -116,18 +133,26 @@ const onClick: EventListener = (event: Event) => {
   }
 
   if ('tour-new' === event.target.id) {
-    return newTour($configurator).then(newTour => {
-      currentTour = newTour;
-    });
+    return newTour($configurator)
+      .then(newTour => {
+        updateStatus('', $configurator);
+        currentTour = newTour;
+      })
+      .catch(e => updateStatus(`Error: ${e.message || e}`, $configurator));
   }
 
   if ('tour-save' === event.target.id) {
     const $btn = $configurator.querySelector('#tour-save');
 
     toggleAttribute($btn, 'disabled');
-    return saveTour(currentTour, $configurator).then(() => {
-      toggleAttribute($btn, 'disabled');
-    });
+    return saveTour(currentTour, $configurator)
+      .then(() => {
+        updateStatus('', $configurator);
+      })
+      .catch(e => updateStatus(`Error: ${e.message || e}`, $configurator))
+      .then(() => {
+        toggleAttribute($btn, 'disabled');
+      });
   }
 
   if ('tour-record' === event.target.id) {
@@ -173,14 +198,12 @@ const onClick: EventListener = (event: Event) => {
     placement = 'left';
   }
 
-  return addStepToTour(
-    currentTour,
-    path,
-    placement,
-    $configurator
-  ).then(updatedTour => {
-    currentTour = updatedTour;
-  });
+  return addStepToTour(currentTour, path, placement, $configurator)
+    .then(updatedTour => {
+      updateStatus('', $configurator);
+      currentTour = updatedTour;
+    })
+    .catch(e => updateStatus(`Error: ${e.message || e}`, $configurator));
 };
 
 ext.runtime.onMessage.addListener((request, sender, sendResponse) => {

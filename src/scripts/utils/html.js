@@ -42,3 +42,11 @@ export const getEditor = ($configurator: HTMLElement | null): ?HTMLTextAreaEleme
 
   return (($configurator.querySelector('textarea'): any): ?HTMLTextAreaElement);
 };
+
+export const getStatus = ($configurator: HTMLElement | null): ?HTMLElement => {
+  if (!$configurator) {
+    return null;
+  }
+
+  return $configurator.querySelector('#galaxy-tourbuilder-status');
+};
