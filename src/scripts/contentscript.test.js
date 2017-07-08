@@ -1,6 +1,6 @@
 import * as cs from './contentscript';
 import GalaxyTour from './GalaxyTour';
-import { getStatus } from './utils/html';
+import { getEditor, getStatus } from './utils/html';
 
 jest.mock('./utils/ext', () => {
   return {
@@ -26,11 +26,11 @@ describe('syncEditorWithTour()', () => {
     const tour = new GalaxyTour();
     const $el = document.querySelector('#galaxy-tourbuilder');
 
-    expect($el.querySelector('textarea').value).toEqual('');
+    expect(getEditor($el).value).toEqual('');
 
     return cs.syncEditorWithTour(tour, $el).then(t => {
       expect(t).toBe(tour);
-      expect($el.querySelector('textarea').value).toEqual(tour.toYAML());
+      expect(getEditor($el).value).toEqual(tour.toYAML());
     });
   });
 
@@ -40,7 +40,7 @@ describe('syncEditorWithTour()', () => {
 
     const tour = new GalaxyTour();
     const $el = document.querySelector('#galaxy-tourbuilder');
-    expect($el.querySelector('textarea').value).toEqual('');
+    expect(getEditor($el).value).toEqual('');
 
     // force-throw an error
     tour.toYAML = () => {
@@ -59,11 +59,11 @@ describe('newTour()', () => {
       '<div id="galaxy-tourbuilder"><textarea>id: foo</textarea></div>';
 
     const $el = document.querySelector('#galaxy-tourbuilder');
-    expect($el.querySelector('textarea').value).toEqual('id: foo');
+    expect(getEditor($el).value).toEqual('id: foo');
 
     return cs.newTour($el).then(t => {
       expect(t).toMatchObject(new GalaxyTour());
-      expect($el.querySelector('textarea').value).toEqual(t.toYAML());
+      expect(getEditor($el).value).toEqual(t.toYAML());
     });
   });
 });
@@ -74,11 +74,11 @@ describe('saveTour()', () => {
       '<div id="galaxy-tourbuilder"><textarea>id: foo</textarea></div>';
 
     const $el = document.querySelector('#galaxy-tourbuilder');
-    expect($el.querySelector('textarea').value).toEqual('id: foo');
+    expect(getEditor($el).value).toEqual('id: foo');
 
     return cs.saveTour(new GalaxyTour(), $el).then(t => {
       expect(t.id).toBe('foo');
-      expect($el.querySelector('textarea').value).toEqual(t.toYAML());
+      expect(getEditor($el).value).toEqual(t.toYAML());
     });
   });
 
@@ -108,13 +108,13 @@ describe('addStepToTour()', () => {
 
     const tour = new GalaxyTour();
     const $el = document.querySelector('#galaxy-tourbuilder');
-    expect($el.querySelector('textarea').value).toEqual('');
+    expect(getEditor($el).value).toEqual('');
 
     expect(tour.steps.length).toBe(0);
 
     return cs.addStepToTour(tour, 'path', 'placement', $el).then(t => {
       expect(tour.steps.length).toBe(1);
-      expect($el.querySelector('textarea').value).toEqual(t.toYAML());
+      expect(getEditor($el).value).toEqual(t.toYAML());
     });
   });
 });
