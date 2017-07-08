@@ -28,6 +28,7 @@ export const createPanel = () => {
     <div class="resizable-panel">
       <div class="resizable-panel-grip"></div>
       <textarea wrap="off"></textarea>
+      <div id="galaxy-tourbuilder-status"></div>
     </div>
   `;
 
