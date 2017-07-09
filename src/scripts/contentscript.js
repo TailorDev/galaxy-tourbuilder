@@ -74,6 +74,8 @@ export const updateStatus = (message: string, $panel: HTMLElement) => {
   $status.innerHTML = message;
 };
 
+const clearStatus = ($panel: HTMLElement) => updateStatus('', $panel);
+
 const runTour = (tour: GalaxyTour) => {
   const script = document.createElement('script');
   const jsonSteps = JSON.stringify(tour.getStepsForInjection(), (k, v) => {
@@ -116,7 +118,7 @@ const runTour = (tour: GalaxyTour) => {
   script.remove();
 };
 
-const onClick: EventListener = (event: Event) => {
+export const onClick: EventListener = (event: Event) => {
   const $panel = html.getPanel();
   if (!$panel) {
     return;
@@ -130,30 +132,26 @@ const onClick: EventListener = (event: Event) => {
   if (event.target.id === html.BTN_NEW) {
     return newTour($panel)
       .then(newTour => {
-        updateStatus('', $panel);
+        clearStatus($panel);
         currentTour = newTour;
       })
       .catch(e => updateStatus(`Error: ${e.message || e}`, $panel));
   }
 
   if (event.target.id === html.BTN_SAVE) {
-    const $btn = $panel.querySelector('#tour-save');
-
+    const $btn = $panel.querySelector(html.BTN_SAVE);
     toggleAttribute($btn, 'disabled');
+
     return saveTour(currentTour, $panel)
-      .then(() => {
-        updateStatus('', $panel);
-      })
+      .then(() => clearStatus($panel))
       .catch(e => updateStatus(`Error: ${e.message || e}`, $panel))
-      .then(() => {
-        toggleAttribute($btn, 'disabled');
-      });
+      .then(() => toggleAttribute($btn, 'disabled'));
   }
 
   if (event.target.id === html.BTN_RECORD) {
     toggleClass($panel, 'recording');
-    ['run', 'export', 'new'].forEach(action => {
-      toggleAttribute($panel.querySelector(`#tour-${action}`), 'disabled');
+    [html.BTN_PLAY, html.BTN_EXPORT, html.BTN_NEW].forEach(button => {
+      toggleAttribute($panel.querySelector(`#${button}`), 'disabled');
     });
     recording = !recording;
     return;
@@ -191,10 +189,8 @@ const onClick: EventListener = (event: Event) => {
   }
 
   return addStepToTour(currentTour, path, placement, $panel)
-    .then(updatedTour => {
-      updateStatus('', $panel);
-      currentTour = updatedTour;
-    })
+    .then(updatedTour => (currentTour = updatedTour))
+    .then(() => clearStatus($panel))
     .catch(e => updateStatus(`Error: ${e.message || e}`, $panel));
 };
 

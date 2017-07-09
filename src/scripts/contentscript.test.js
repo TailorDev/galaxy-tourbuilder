@@ -1,6 +1,6 @@
 import * as cs from './contentscript';
 import GalaxyTour from './GalaxyTour';
-import { getEditor, getStatus } from './utils/html';
+import * as html from './utils/html';
 
 jest.mock('./utils/ext', () => {
   return {
@@ -26,11 +26,11 @@ describe('syncEditorWithTour()', () => {
     const tour = new GalaxyTour();
     const $el = document.querySelector('#galaxy-tourbuilder');
 
-    expect(getEditor($el).value).toEqual('');
+    expect(html.getEditor($el).value).toEqual('');
 
     return cs.syncEditorWithTour(tour, $el).then(t => {
       expect(t).toBe(tour);
-      expect(getEditor($el).value).toEqual(tour.toYAML());
+      expect(html.getEditor($el).value).toEqual(tour.toYAML());
     });
   });
 
@@ -40,7 +40,7 @@ describe('syncEditorWithTour()', () => {
 
     const tour = new GalaxyTour();
     const $el = document.querySelector('#galaxy-tourbuilder');
-    expect(getEditor($el).value).toEqual('');
+    expect(html.getEditor($el).value).toEqual('');
 
     // force-throw an error
     tour.toYAML = () => {
@@ -59,11 +59,11 @@ describe('newTour()', () => {
       '<div id="galaxy-tourbuilder"><textarea>id: foo</textarea></div>';
 
     const $el = document.querySelector('#galaxy-tourbuilder');
-    expect(getEditor($el).value).toEqual('id: foo');
+    expect(html.getEditor($el).value).toEqual('id: foo');
 
     return cs.newTour($el).then(t => {
       expect(t).toMatchObject(new GalaxyTour());
-      expect(getEditor($el).value).toEqual(t.toYAML());
+      expect(html.getEditor($el).value).toEqual(t.toYAML());
     });
   });
 });
@@ -74,11 +74,11 @@ describe('saveTour()', () => {
       '<div id="galaxy-tourbuilder"><textarea>id: foo</textarea></div>';
 
     const $el = document.querySelector('#galaxy-tourbuilder');
-    expect(getEditor($el).value).toEqual('id: foo');
+    expect(html.getEditor($el).value).toEqual('id: foo');
 
     return cs.saveTour(new GalaxyTour(), $el).then(t => {
       expect(t.id).toBe('foo');
-      expect(getEditor($el).value).toEqual(t.toYAML());
+      expect(html.getEditor($el).value).toEqual(t.toYAML());
     });
   });
 
@@ -108,13 +108,13 @@ describe('addStepToTour()', () => {
 
     const tour = new GalaxyTour();
     const $el = document.querySelector('#galaxy-tourbuilder');
-    expect(getEditor($el).value).toEqual('');
+    expect(html.getEditor($el).value).toEqual('');
 
     expect(tour.steps.length).toBe(0);
 
     return cs.addStepToTour(tour, 'path', 'placement', $el).then(t => {
       expect(tour.steps.length).toBe(1);
-      expect(getEditor($el).value).toEqual(t.toYAML());
+      expect(html.getEditor($el).value).toEqual(t.toYAML());
     });
   });
 });
@@ -128,9 +128,101 @@ describe('updateStatus()', () => {
       '</div>';
 
     const $el = document.querySelector('#galaxy-tourbuilder');
-    expect(getStatus($el).innerHTML).toEqual('');
+    expect(html.getStatus($el).innerHTML).toEqual('');
 
     cs.updateStatus('hello, world', $el);
-    expect(getStatus($el).innerHTML).toEqual('hello, world');
+    expect(html.getStatus($el).innerHTML).toEqual('hello, world');
+  });
+});
+
+describe('onClick()', () => {
+  it('can toggle the editor', () => {
+    document.body.innerHTML = '<div id="galaxy-tourbuilder"></div>';
+
+    const $el = document.querySelector('#galaxy-tourbuilder');
+    expect($el.className).toBe('');
+
+    cs.onClick({ target: { id: html.BTN_TOGGLE } });
+    expect($el.className).toBe('hidden');
+
+    cs.onClick({ target: { id: html.BTN_TOGGLE } });
+    expect($el.className).toBe('');
+  });
+
+  it('can create a new tour', () => {
+    document.body.innerHTML =
+      '<div id="galaxy-tourbuilder"><textarea>id: foo</textarea></div>';
+
+    const $el = document.querySelector('#galaxy-tourbuilder');
+    expect(html.getEditor($el).value).toEqual('id: foo');
+
+    cs.onClick({ target: { id: html.BTN_NEW } });
+    expect(html.getEditor($el).value).not.toEqual('id: foo');
+    expect(html.getEditor($el).value).toContain('id: new-tour');
+  });
+
+  it('can start/stop recording', () => {
+    document.body.innerHTML = html.createPanel().outerHTML;
+
+    const $el = document.querySelector('#galaxy-tourbuilder');
+    expect($el.className).toBe('');
+    expect($el.querySelector(`#${html.BTN_NEW}`).disabled).toBe(false);
+    expect($el.querySelector(`#${html.BTN_PLAY}`).disabled).toBe(false);
+    expect($el.querySelector(`#${html.BTN_EXPORT}`).disabled).toBe(false);
+
+    cs.onClick({ target: { id: html.BTN_RECORD } });
+
+    expect($el.className).toBe('recording');
+    expect($el.querySelector(`#${html.BTN_NEW}`).disabled).toBe(true);
+    expect($el.querySelector(`#${html.BTN_PLAY}`).disabled).toBe(true);
+    expect($el.querySelector(`#${html.BTN_EXPORT}`).disabled).toBe(true);
+
+    cs.onClick({ target: { id: html.BTN_RECORD } });
+
+    expect($el.className).toBe('');
+    expect($el.querySelector(`#${html.BTN_NEW}`).disabled).toBe(false);
+    expect($el.querySelector(`#${html.BTN_PLAY}`).disabled).toBe(false);
+    expect($el.querySelector(`#${html.BTN_EXPORT}`).disabled).toBe(false);
+  });
+
+  it('can save the content of a tour', () => {
+    document.body.innerHTML =
+      '<div id="galaxy-tourbuilder"><textarea>id: foo</textarea></div>';
+
+    const $el = document.querySelector('#galaxy-tourbuilder');
+    expect(html.getEditor($el).value).toEqual('id: foo');
+
+    // This is possible because we return the promise of `saveTour()` in the
+    // code. Also, saving a tour adds missing information to the YAML.
+    return cs.onClick({ target: { id: html.BTN_SAVE } }).then(() => {
+      expect(html.getEditor($el).value).toEqual(
+        [
+          'id: foo',
+          "name: ''",
+          "description: ''",
+          "title_default: ''",
+          'steps: []\n',
+        ].join('\n')
+      );
+    });
+  });
+
+  it('can handle error on save', () => {
+    document.body.innerHTML = html.createPanel().outerHTML;
+
+    const $el = document.querySelector('#galaxy-tourbuilder');
+    // here the steps attribute has an opening bracket, but not the closing
+    // one, resulting in an error.
+    html.getEditor($el).innerHTML = 'id: foo\nsteps: [';
+
+    expect(html.getStatus($el).innerHTML).toEqual('');
+
+    // This is possible because we return the promise of `saveTour()` in the
+    // code.
+    return cs.onClick({ target: { id: html.BTN_SAVE } }).then(() => {
+      expect(html.getStatus($el).innerHTML).toContain(
+        'Error: unexpected end of the stream within a flow collection at line 3, column 1'
+      );
+    });
   });
 });

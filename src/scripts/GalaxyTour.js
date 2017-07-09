@@ -71,6 +71,9 @@ class GalaxyTour {
 
   fromYAML(content: string) {
     const data = yaml.load(content);
+    if (!data) {
+      return;
+    }
 
     ['id', 'name', 'description', 'title_default', 'steps'].forEach(prop => {
       // cf. https://github.com/facebook/flow/issues/103
