@@ -62,7 +62,13 @@ in the Chrome Web Store.
 
 This extension is available under the name [Galaxy Tour
 Builder](https://addons.mozilla.org/en-US/firefox/addon/galaxy-tour-builder/) on
-the Firefox Add-ons website.
+the Mozilla Add-ons website.
+
+#### Opera add-ons
+
+This extension is available under the name [Galaxy Tour
+Builder](https://addons.opera.com/en/extensions/details/galaxy-tour-builder/) on
+the Opera add-ons website.
 
 ## Credits
 
