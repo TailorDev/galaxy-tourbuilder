@@ -1,6 +1,6 @@
 {
   "name": "galaxy-tourbuilder",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "The amazing Galaxy Tour Builder web extension.",
   "scripts": {
     "chrome-build": "cross-env TARGET=chrome gulp",
