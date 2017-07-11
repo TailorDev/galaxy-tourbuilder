@@ -1,5 +1,7 @@
 /* @flow */
 
+const TOUR_ID_ATTR = 'tour_id';
+
 const getElementName = (element: Element, origin: string) => {
   if (element.id) {
     return `#${element.id}`;
@@ -16,8 +18,13 @@ const getElementName = (element: Element, origin: string) => {
   return (element.tagName || '').toLowerCase() || null;
 };
 
-export const path = (element: Element, origin: any) => {
-  if (element.id) {
+export const path = (element: Element, origin: any): ?string => {
+  if (!element) {
+    return null;
+  }
+
+  let elementId = element.id;
+  if (elementId && !/uid-/.test(elementId)) {
     return `#${element.id}`;
   }
 
@@ -25,6 +32,19 @@ export const path = (element: Element, origin: any) => {
   let parent: ?Element = element.parentElement;
 
   while (parent) {
+    // Galaxy's `tour_id` takes precedence over anything else
+    if (parent.hasAttribute(TOUR_ID_ATTR)) {
+      const tourId = parent.getAttribute(TOUR_ID_ATTR);
+      if (tourId) {
+        return [
+          parent.tagName.toLowerCase(),
+          `[${TOUR_ID_ATTR}="${tourId}"]`,
+        ].join('');
+      } else if (elementId) {
+        return `#${elementId}`;
+      }
+    }
+
     if (parent.id) {
       // buttons usually have children for icon, text, etc., but we are not
       // interested in them

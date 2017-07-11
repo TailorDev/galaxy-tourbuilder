@@ -24,6 +24,22 @@ test('utils/dom', () => {
       <button type="button" id="btn-new-without-children">click me</button>
       <span class="with-extra-space "></span>
     </div>
+    <!-- fixtures for Galaxy tour_id attribute -->
+    <div class="ui-form-element section-row" id="uid-10" tour_id="grouping" style="display: block;">
+      <div class="ui-form-error ui-error" style="display: none;">
+        <span class="fa fa-arrow-down"></span><span class="ui-form-error-text"></span>
+      </div>
+      <div class="ui-form-field" style="display: block;">
+        <input class="ui-input" id="field-uid-10" type="text" style="display: inline-block;">
+        <span class="ui-form-info">Example: to group by the first and fourth fields, use 1,4.</span>
+      </div>
+    </div>
+    <div class="ui-form-element section-row" id="uid-11" tour_id="" style="display: block;">
+      <div class="ui-form-field" style="display: block;">
+        <input class="ui-input" id="field-uid-11" type="text" style="display: inline-block;">
+        <span class="ui-form-info">Example: to group by the first and fourth fields, use 1,4.</span>
+      </div>
+    </div>
   `;
 
   expect(path(document.querySelector('#username'))).toEqual('#username');
@@ -45,5 +61,19 @@ test('utils/dom', () => {
   );
   expect(path(document.querySelector('.foo .with-extra-space'))).toEqual(
     'body .foo .with-extra-space'
+  );
+  expect(path(document.querySelector('foo'))).toBe(null);
+  // handle Galaxy `tour_id` attributes
+  expect(path(document.querySelector('#field-uid-10'))).toEqual(
+    'div[tour_id="grouping"]'
+  );
+  expect(path(document.querySelector('#uid-10 span'))).toEqual(
+    'div[tour_id="grouping"]'
+  );
+  expect(path(document.querySelector('#field-uid-11'))).toEqual(
+    '#field-uid-11'
+  );
+  expect(path(document.querySelector('#uid-11 span'))).toEqual(
+    '#uid-11 .ui-form-field .ui-form-info'
   );
 });
