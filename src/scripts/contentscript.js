@@ -71,7 +71,7 @@ export const updateStatus = (message: string, $panel: HTMLElement) => {
     return;
   }
 
-  $status.innerHTML = message;
+  $status.textContent = message;
 };
 
 const clearStatus = ($panel: HTMLElement) => updateStatus('', $panel);
