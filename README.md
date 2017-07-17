@@ -17,7 +17,7 @@
   <p>
 </div>
 
-[![Build Status](https://travis-ci.org/TailorDev/galaxy-tourbuilder.svg?branch=master)](https://travis-ci.org/TailorDev/galaxy-tourbuilder)
+[![Build Status](https://travis-ci.org/TailorDev/galaxy-tourbuilder.svg?branch=master)](https://travis-ci.org/TailorDev/galaxy-tourbuilder) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.830177.svg)](https://doi.org/10.5281/zenodo.830177)
 
 ## Installation
 
