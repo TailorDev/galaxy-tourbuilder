@@ -10,7 +10,14 @@
   <p>
     Check out the video: <a href="https://imgur.com/a/0YVvz">https://imgur.com/a/0YVvz</a>.</strong>
     <br>
-    Support all Galaxy instances · Record/Pause · Live simulation · Export
+    Support all Galaxy instances · Record/Pause · Live simulation · Export · Available in all stores:
+  </p>
+  <p>
+    <a href="https://chrome.google.com/webstore/detail/galaxy-tour-builder/mdfbapknmcpnbmggahhaegehbbbmhmgg"><img src="https://img.shields.io/chrome-web-store/v/mdfbapknmcpnbmggahhaegehbbbmhmgg.svg"></a>
+    &nbsp;
+    <a href="https://addons.mozilla.org/en-US/firefox/addon/galaxy-tour-builder/"><img src="https://img.shields.io/amo/v/galaxy-tour-builder.svg"></a>
+    &nbsp;
+    <a href="https://addons.opera.com/en/extensions/details/galaxy-tour-builder/"><img src="https://img.shields.io/badge/opera%20add--ons-1.3.0-blue.svg"></a>
   </p>
   <p>
     <img src="res/screenshot.png">
@@ -24,6 +31,10 @@
 1. Clone this repository
 2. Run `npm install`
 3. Run `npm run build`
+
+**Note:** This is only useful if you want to install the extension locally,
+_e.g._, for hacking on it. If you want to use it, you should install it
+from your browser "app store".
 
 ##### Load the extension in Chrome & Opera
 
@@ -50,7 +61,7 @@ and want to enable live reload -
 ## Packaging
 
 Run `npm run dist` to create a zipped, production-ready extension for each
-browser. You can then upload that to the appstore.
+browser. You can then upload that to the different app stores.
 
 ##### Chrome Web Store
 
@@ -58,11 +69,11 @@ This extension is available under the name [Galaxy Tour
 Builder](https://chrome.google.com/webstore/detail/galaxy-tour-builder/mdfbapknmcpnbmggahhaegehbbbmhmgg)
 in the Chrome Web Store.
 
-#### Firefox Add-ons
+#### Mozilla Add-ons (Firefox)
 
 This extension is available under the name [Galaxy Tour
 Builder](https://addons.mozilla.org/en-US/firefox/addon/galaxy-tour-builder/) on
-the Mozilla Add-ons website.
+the Mozilla Add-on website.
 
 #### Opera add-ons
 
