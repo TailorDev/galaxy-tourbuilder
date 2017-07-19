@@ -40,6 +40,21 @@ test('utils/dom', () => {
         <span class="ui-form-info">Example: to group by the first and fourth fields, use 1,4.</span>
       </div>
     </div>
+    <!-- fixtures for Galaxy tour_id attribute in workflow -->
+    <div class="ui-form-element section-row" id="uid-1" tour_id="new_history|check" style="display: block;">
+      <div class="ui-form-error ui-error" style="display: none;"><span class="fa fa-arrow-down"></span><span class="ui-form-error-text"></span></div>
+      <div class="ui-form-title">
+        <div class="ui-form-collapsible" style="display: none;"><i class="ui-form-collapsible-icon"></i><span class="ui-form-collapsible-text"></span></div><span class="ui-form-title-text" style="display: inline;">Send results to a new history</span></div>
+      <div class="ui-form-field" style="display: block;">
+        <div id="field-uid-1" class="ui-options" style="display: block;">
+          <div style="display: none;"></div>
+          <div class="ui-options-menu" style="display: block;"></div>
+          <div class="btn-group ui-radiobutton" data-toggle="buttons" style="display: inline-block;"><label class="btn btn-default ui-option" data-original-title="" title=""><input type="radio" name="field-uid-1" value="true">Yes</label><label class="btn btn-default ui-option active" data-original-title="" title=""><input type="radio" name="field-uid-1" value="false">No</label></div>
+        </div><span class="ui-form-info"></span>
+        <div class="ui-form-backdrop" style="display: none;"></div>
+      </div>
+      <div class="ui-form-preview" style="display: none;"></div>
+    </div>
   `;
 
   expect(path(document.querySelector('#username'))).toEqual('#username');
@@ -75,5 +90,11 @@ test('utils/dom', () => {
   );
   expect(path(document.querySelector('#uid-11 span'))).toEqual(
     '#uid-11 .ui-form-field .ui-form-info'
+  );
+  expect(path(document.querySelector('#field-uid-1 .btn-group'))).toEqual(
+    'div[tour_id="new_history|check"]'
+  );
+  expect(path(document.querySelector('#field-uid-1 .btn-group label'))).toEqual(
+    'div[tour_id="new_history|check"]'
   );
 });

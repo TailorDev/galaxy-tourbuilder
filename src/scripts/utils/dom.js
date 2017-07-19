@@ -31,8 +31,9 @@ export const path = (element: Element, origin: any): ?string => {
   const parts = [getElementName(element, origin)];
   let parent: ?Element = element.parentElement;
 
+  // Galaxy's `tour_id` takes precedence over anything else, so we start by
+  // looking for it first.
   while (parent) {
-    // Galaxy's `tour_id` takes precedence over anything else
     if (parent.hasAttribute(TOUR_ID_ATTR)) {
       const tourId = parent.getAttribute(TOUR_ID_ATTR);
       if (tourId) {
@@ -40,11 +41,21 @@ export const path = (element: Element, origin: any): ?string => {
           parent.tagName.toLowerCase(),
           `[${TOUR_ID_ATTR}="${tourId}"]`,
         ].join('');
-      } else if (elementId) {
-        return `#${elementId}`;
       }
     }
 
+    parent = parent.parentElement;
+  }
+
+  if (elementId) {
+    return `#${elementId}`;
+  }
+
+  // If we did not find any `tour_id` and there is no element ID on the current
+  // element, we try to build a unique DOM path.
+  parent = element.parentElement;
+
+  while (parent) {
     if (parent.id) {
       // buttons usually have children for icon, text, etc., but we are not
       // interested in them
