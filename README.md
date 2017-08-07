@@ -17,7 +17,7 @@
     &nbsp;
     <a href="https://addons.mozilla.org/en-US/firefox/addon/galaxy-tour-builder/"><img src="https://img.shields.io/amo/v/galaxy-tour-builder.svg"></a>
     &nbsp;
-    <a href="https://addons.opera.com/en/extensions/details/galaxy-tour-builder/"><img src="https://img.shields.io/badge/opera%20add--ons-1.3.0-blue.svg"></a>
+    <a href="https://addons.opera.com/en/extensions/details/galaxy-tour-builder/"><img src="https://img.shields.io/badge/opera%20add--ons-v1.3.2-blue.svg"></a>
   </p>
   <p>
     <img src="res/screenshot.png">
