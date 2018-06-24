@@ -76,7 +76,7 @@ export const updateStatus = (message: string, $panel: HTMLElement) => {
 
 const clearStatus = ($panel: HTMLElement) => updateStatus('', $panel);
 
-const runTour = (tour: GalaxyTour) => {
+export const runTour = (tour: GalaxyTour) => {
   const script = document.createElement('script');
   const jsonSteps = JSON.stringify(tour.getStepsForInjection(), (k, v) => {
     if (typeof v === 'function') {
@@ -93,8 +93,9 @@ const runTour = (tour: GalaxyTour) => {
       }
 
       function parse(obj) {
+        var IS_FUNCTION = /^\\\(function\\s?\\\(\\\)/;
         return JSON.parse(obj, (k, v) => {
-          if (typeof v === 'string' && v.indexOf('(function()') >= 0) {
+          if (typeof v === 'string' && IS_FUNCTION.test(v)) {
             return eval(v);
           }
           return v;

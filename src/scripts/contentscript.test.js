@@ -226,3 +226,71 @@ describe('onClick()', () => {
     });
   });
 });
+
+describe('runTour()', () => {
+  beforeEach(() => {
+    window.alert = jest.fn();
+    window.jQuery = jest.fn();
+  });
+
+  it('creates a `script` element', () => {
+    const spy = jest.spyOn(document.head, 'appendChild');
+
+    const tour = new GalaxyTour();
+    cs.runTour(tour);
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('removes the `script` element after having run', () => {
+    const tour = new GalaxyTour();
+    cs.runTour(tour);
+
+    expect(document.head.innerHTML).toEqual('');
+  });
+
+  it('parses the tour steps', () => {
+    class FakeTour {
+      constructor(props) {
+        FakeTour.props = props;
+      }
+
+      goTo() {}
+
+      init() {}
+
+      restart() {}
+    }
+
+    // Create a fake Tour class so that we can fully test the logic that is
+    // injected in the page when the "play" button is clicked.
+    window.Tour = FakeTour;
+
+    const tour = new GalaxyTour();
+    // See: https://github.com/TailorDev/galaxy-tourbuilder/issues/14
+    tour.fromYAML(`
+id: new-tour
+steps:
+  - title: Step 1
+    element: '#tool-panel-upload-button .fa.fa-upload'
+    content: 'hello'
+    placement: right
+    postclick:
+      - '#tool-panel-upload-button .fa.fa-upload'
+    `);
+    cs.runTour(tour);
+
+    expect(FakeTour.props).toEqual({
+      steps: [
+        {
+          title: 'Step 1',
+          element: '#tool-panel-upload-button .fa.fa-upload',
+          content: 'hello',
+          placement: 'right',
+          postclick: ['#tool-panel-upload-button .fa.fa-upload'],
+          onNext: expect.any(Function),
+        },
+      ],
+    });
+  });
+});
