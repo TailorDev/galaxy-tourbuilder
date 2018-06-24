@@ -47,7 +47,9 @@ export const getPanel = (): ?HTMLElement => {
   return document.querySelector('#galaxy-tourbuilder');
 };
 
-export const getEditor = ($configurator: HTMLElement | null): ?HTMLTextAreaElement => {
+export const getEditor = (
+  $configurator: HTMLElement | null
+): ?HTMLTextAreaElement => {
   if (!$configurator) {
     return null;
   }

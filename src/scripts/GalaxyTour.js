@@ -43,9 +43,9 @@ class GalaxyTour {
         name,
         description,
         title_default,
-        steps: steps.map(s => {
+        steps: steps.map((s) => {
           // exclude blank attributes to clean YAML
-          Object.keys(s).forEach(k => {
+          Object.keys(s).forEach((k) => {
             // whitelist attrs we always want
             if (k === 'content' || k === 'placement') {
               return;
@@ -75,7 +75,7 @@ class GalaxyTour {
       return;
     }
 
-    ['id', 'name', 'description', 'title_default', 'steps'].forEach(prop => {
+    ['id', 'name', 'description', 'title_default', 'steps'].forEach((prop) => {
       // cf. https://github.com/facebook/flow/issues/103
       var that: { [key: string]: string | Array<TourStep> } = this;
       that[prop] = data[prop] || (prop === 'steps' ? [] : '');
@@ -108,15 +108,15 @@ class GalaxyTour {
 
   getStepsForInjection(): Array<TourStep> {
     // mimic Galaxy, not exhaustive yet
-    const steps = this.steps.map(s => {
+    const steps = this.steps.map((s) => {
       const step: TourStep = Object.assign({}, s);
 
       if (step.preclick) {
         // we use $ (jQuery) because this will be injected into Galaxy
         // cf. contentscript.js code (run)
         step.onShow = function() {
-          this.preclick.forEach(el => {
-            // $FlowFixMe
+          this.preclick.forEach((el) => {
+            // $FlowFixMe: `$` is a global variable.
             $(el).click();
           });
         };
@@ -126,8 +126,8 @@ class GalaxyTour {
         // we use $ (jQuery) because this will be injected into Galaxy
         // cf. contentscript.js code (run)
         step.onNext = function() {
-          this.postclick.forEach(el => {
-            // $FlowFixMe
+          this.postclick.forEach((el) => {
+            // $FlowFixMe: `$` is a global variable.
             $(el).click();
           });
         };
@@ -137,8 +137,10 @@ class GalaxyTour {
         // we use $ (jQuery) because this will be injected into Galaxy
         // cf. contentscript.js code (run)
         step.onShown = function() {
-          // $FlowFixMe
-          $(this.element).val(this.textinsert).trigger('change');
+          // $FlowFixMe: `$` is a global variable.
+          $(this.element)
+            .val(this.textinsert)
+            .trigger('change');
         };
       }
 

@@ -28,7 +28,7 @@ describe('syncEditorWithTour()', () => {
 
     expect(html.getEditor($el).value).toEqual('');
 
-    return cs.syncEditorWithTour(tour, $el).then(t => {
+    return cs.syncEditorWithTour(tour, $el).then((t) => {
       expect(t).toBe(tour);
       expect(html.getEditor($el).value).toEqual(tour.toYAML());
     });
@@ -47,7 +47,7 @@ describe('syncEditorWithTour()', () => {
       throw new Error('error message');
     };
 
-    return cs.syncEditorWithTour(tour, $el).catch(e => {
+    return cs.syncEditorWithTour(tour, $el).catch((e) => {
       expect(e.message).toEqual('error message');
     });
   });
@@ -61,7 +61,7 @@ describe('newTour()', () => {
     const $el = document.querySelector('#galaxy-tourbuilder');
     expect(html.getEditor($el).value).toEqual('id: foo');
 
-    return cs.newTour($el).then(t => {
+    return cs.newTour($el).then((t) => {
       expect(t).toMatchObject(new GalaxyTour());
       expect(html.getEditor($el).value).toEqual(t.toYAML());
     });
@@ -76,7 +76,7 @@ describe('saveTour()', () => {
     const $el = document.querySelector('#galaxy-tourbuilder');
     expect(html.getEditor($el).value).toEqual('id: foo');
 
-    return cs.saveTour(new GalaxyTour(), $el).then(t => {
+    return cs.saveTour(new GalaxyTour(), $el).then((t) => {
       expect(t.id).toBe('foo');
       expect(html.getEditor($el).value).toEqual(t.toYAML());
     });
@@ -95,7 +95,7 @@ describe('saveTour()', () => {
       throw new Error('error message');
     };
 
-    return cs.saveTour(tour, $el).catch(e => {
+    return cs.saveTour(tour, $el).catch((e) => {
       expect(e.message).toEqual('error message');
     });
   });
@@ -112,7 +112,7 @@ describe('addStepToTour()', () => {
 
     expect(tour.steps.length).toBe(0);
 
-    return cs.addStepToTour(tour, 'path', 'placement', $el).then(t => {
+    return cs.addStepToTour(tour, 'path', 'placement', $el).then((t) => {
       expect(tour.steps.length).toBe(1);
       expect(html.getEditor($el).value).toEqual(t.toYAML());
     });

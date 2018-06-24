@@ -51,7 +51,7 @@ export const saveTour = (
     } catch (e) {
       rej(e);
     }
-  }).then(tour => syncEditorWithTour(tour, $panel));
+  }).then((tour) => syncEditorWithTour(tour, $panel));
 };
 
 export const addStepToTour = (
@@ -124,40 +124,48 @@ export const onClick: EventListener = (event: Event) => {
     return;
   }
 
-  if (event.target.id === html.BTN_TOGGLE) {
+  // $FlowFixMe: `event.target` may have an `id` attribute.
+  const hasId = typeof event.target.id !== 'undefined';
+
+  // $FlowFixMe: `event.target` may have an `id` attribute.
+  if (hasId && event.target.id === html.BTN_TOGGLE) {
     toggleClass($panel, 'hidden');
     return;
   }
 
-  if (event.target.id === html.BTN_NEW) {
+  // $FlowFixMe: `event.target` may have an `id` attribute.
+  if (hasId && event.target.id === html.BTN_NEW) {
     return newTour($panel)
-      .then(newTour => {
+      .then((newTour) => {
         clearStatus($panel);
         currentTour = newTour;
       })
-      .catch(e => updateStatus(`Error: ${e.message || e}`, $panel));
+      .catch((e) => updateStatus(`Error: ${e.message || e}`, $panel));
   }
 
-  if (event.target.id === html.BTN_SAVE) {
+  // $FlowFixMe: `event.target` may have an `id` attribute.
+  if (hasId && event.target.id === html.BTN_SAVE) {
     const $btn = $panel.querySelector(html.BTN_SAVE);
     toggleAttribute($btn, 'disabled');
 
     return saveTour(currentTour, $panel)
       .then(() => clearStatus($panel))
-      .catch(e => updateStatus(`Error: ${e.message || e}`, $panel))
+      .catch((e) => updateStatus(`Error: ${e.message || e}`, $panel))
       .then(() => toggleAttribute($btn, 'disabled'));
   }
 
-  if (event.target.id === html.BTN_RECORD) {
+  // $FlowFixMe: `event.target` may have an `id` attribute.
+  if (hasId && event.target.id === html.BTN_RECORD) {
     toggleClass($panel, 'recording');
-    [html.BTN_PLAY, html.BTN_EXPORT, html.BTN_NEW].forEach(button => {
+    [html.BTN_PLAY, html.BTN_EXPORT, html.BTN_NEW].forEach((button) => {
       toggleAttribute($panel.querySelector(`#${button}`), 'disabled');
     });
     recording = !recording;
     return;
   }
 
-  if (event.target.id === html.BTN_EXPORT) {
+  // $FlowFixMe: `event.target` may have an `id` attribute.
+  if (hasId && event.target.id === html.BTN_EXPORT) {
     saveAs(
       new Blob([currentTour.toYAML()], { type: 'text/vnd.yaml;charset=utf-8' }),
       `${currentTour.getId()}.yaml`
@@ -165,12 +173,13 @@ export const onClick: EventListener = (event: Event) => {
     return;
   }
 
-  if (event.target.id === html.BTN_PLAY) {
+  // $FlowFixMe: `event.target` may have an `id` attribute.
+  if (hasId && event.target.id === html.BTN_PLAY) {
     return runTour(currentTour);
   }
 
   const $target: HTMLElement = (event.target: any);
-  const path = getPath($target, document.origin || '');
+  const path = getPath($target, document.defaultView.location.origin || '');
 
   if (
     !recording ||
@@ -189,9 +198,9 @@ export const onClick: EventListener = (event: Event) => {
   }
 
   return addStepToTour(currentTour, path, placement, $panel)
-    .then(updatedTour => (currentTour = updatedTour))
+    .then((updatedTour) => (currentTour = updatedTour))
     .then(() => clearStatus($panel))
-    .catch(e => updateStatus(`Error: ${e.message || e}`, $panel));
+    .catch((e) => updateStatus(`Error: ${e.message || e}`, $panel));
 };
 
 ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -199,7 +208,7 @@ ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
     let $panel = html.getPanel();
 
     if (request.value === true) {
-      storage.get('tour', res => {
+      storage.get('tour', (res) => {
         if (res.tour) {
           currentTour.fromYAML(res.tour);
         }
@@ -210,10 +219,10 @@ ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
           interact('.resizable-panel', { context: $panel })
             .resizable({ edges: { top: true } })
-            .on('resizestart', event => {
+            .on('resizestart', (event) => {
               event.target.disabled = true;
             })
-            .on('resizemove', event => {
+            .on('resizemove', (event) => {
               const h = event.rect.height;
               if (
                 h < html.ACTIONS_HEIGHT + 100 ||
@@ -226,7 +235,7 @@ ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
               event.target.parentNode.style.height = `${h +
                 html.ACTIONS_HEIGHT}px`;
             })
-            .on('resizeend', event => {
+            .on('resizeend', (event) => {
               event.target.disabled = false;
               // force-stop for Firefox
               event.interaction.resizing = false;
@@ -234,7 +243,10 @@ ext.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
           const $editor = html.getEditor($panel);
           if ($editor) {
-            tabOverride.tabSize(2).autoIndent(true).set($editor);
+            tabOverride
+              .tabSize(2)
+              .autoIndent(true)
+              .set($editor);
           }
         }
 
