@@ -94,7 +94,7 @@ const runTour = (tour: GalaxyTour) => {
 
       function parse(obj) {
         return JSON.parse(obj, (k, v) => {
-          if (typeof v === 'string' && v.indexOf('(function ()') >= 0) {
+          if (typeof v === 'string' && v.indexOf('(function()') >= 0) {
             return eval(v);
           }
           return v;
