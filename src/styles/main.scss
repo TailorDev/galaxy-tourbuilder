@@ -20,7 +20,7 @@
         }
     }
 
-    &.hidden {
+    &.is-hidden {
         height: $actions-height!important;
 
         textarea {

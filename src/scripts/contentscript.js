@@ -130,7 +130,7 @@ export const onClick: EventListener = (event: Event) => {
 
   // $FlowFixMe: `event.target` may have an `id` attribute.
   if (hasId && event.target.id === html.BTN_TOGGLE) {
-    toggleClass($panel, 'hidden');
+    toggleClass($panel, 'is-hidden');
     return;
   }
 

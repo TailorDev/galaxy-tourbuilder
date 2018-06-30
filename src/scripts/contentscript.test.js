@@ -143,7 +143,7 @@ describe('onClick()', () => {
     expect($el.className).toBe('');
 
     cs.onClick({ target: { id: html.BTN_TOGGLE } });
-    expect($el.className).toBe('hidden');
+    expect($el.className).toBe('is-hidden');
 
     cs.onClick({ target: { id: html.BTN_TOGGLE } });
     expect($el.className).toBe('');
