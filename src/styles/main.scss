@@ -2,89 +2,92 @@
 @import 'mixins';
 
 #galaxy-tourbuilder {
-    position: fixed;
-    bottom: 0px;
-    width: 100%;
-    z-index: 1500;
+  bottom: 0px;
+  line-height: 1;
+  position: fixed;
+  width: 100%;
+  z-index: 1500;
 
-    .actions {
-        padding: 5px;
-        height: $actions-height;
+  .actions {
+    padding: 5px;
+    height: $actions-height;
 
-        button {
-            @include button($td-blue);
+    button {
+      @include button($td-blue);
 
-            &.primary {
-                @include button($td-green);
-            }
-        }
+      &.primary {
+        @include button($td-green);
+      }
     }
+  }
 
-    &.is-hidden {
-        height: $actions-height!important;
-
-        textarea {
-            display: none;
-        }
-    }
-
-    &.recording {
-        #tour-record {
-            @include button($red);
-        }
-
-        button[disabled] {
-            @include button(lighten($td-blue, 50%));
-            cursor: not-allowed;
-        }
-    }
-
-    .resizable-panel {
-        width: 100%;
-        height: 165px;
-
-        &-grip {
-            background-color: $editor-bg-color;
-            background-image: url('chrome-extension://__MSG_@@extension_id__/images/grip.png'), url('../images/grip.png');
-            background-repeat: no-repeat;
-            background-attachment: scroll;
-            background-position-y: 2px;
-            background-position-x: center;
-            cursor: ns-resize;
-            height: $resizable-panel-grip-height;
-            overflow: hidden;
-        }
-    }
+  &.is-hidden {
+    height: $actions-height !important;
 
     textarea {
-        width: 100%;
-        height: calc(100% - #{$resizable-panel-grip-height + $status-height});
+      display: none;
+    }
+  }
 
-        background-color: $white;
-        background-image: url('chrome-extension://__MSG_@@extension_id__/images/gutter.png'), url('../images/gutter.png');
-        background-attachment: local;
-        background-repeat: no-repeat;
-        padding-top: 13px;
-        padding-left: 35px;
-        padding-right: 13px;
-        padding-bottom: 0px;
-
-        border: none;
-        outline: none;
-        resize: none;
-
-        font-family: Consolas, monaco, monospace;
-        font-size: $editor-font-size;
-        line-height: 16px;
-        color: $black;
+  &.recording {
+    #tour-record {
+      @include button($red);
     }
 
-    &-status {
-        height: $status-height;
-        background-color: $editor-bg-color;
-        font-size: $status-font-size;
-
-        padding-left: 26px;
-        color: $red;
+    button[disabled] {
+      @include button(lighten($td-blue, 50%));
+      cursor: not-allowed;
     }
+  }
+
+  .resizable-panel {
+    background-color: $editor-bg-color;
+    height: 165px;
+    width: 100%;
+
+    &-grip {
+      background-color: $editor-bg-color;
+      background-image: url('chrome-extension://__MSG_@@extension_id__/images/grip.png'),
+        url('../images/grip.png');
+      background-repeat: no-repeat;
+      background-attachment: scroll;
+      background-position-y: 2px;
+      background-position-x: center;
+      cursor: ns-resize;
+      height: $resizable-panel-grip-height;
+      overflow: hidden;
+    }
+  }
+
+  textarea {
+    width: 100%;
+    height: calc(100% - #{$resizable-panel-grip-height + $status-height});
+
+    background-color: $white;
+    background-image: url('chrome-extension://__MSG_@@extension_id__/images/gutter.png'),
+      url('../images/gutter.png');
+    background-attachment: local;
+    background-repeat: no-repeat;
+    padding-top: 13px;
+    padding-left: 35px;
+    padding-right: 13px;
+    padding-bottom: 0px;
+
+    border: none;
+    outline: none;
+    resize: none;
+
+    font-family: Consolas, monaco, monospace;
+    font-size: $editor-font-size;
+    color: $black;
+  }
+
+  &-status {
+    height: $status-height;
+    background-color: $editor-bg-color;
+    font-size: $status-font-size;
+
+    padding-left: 26px;
+    color: $red;
+  }
 }
