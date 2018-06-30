@@ -18,7 +18,7 @@
     "opera-build": "cross-env TARGET=opera gulp",
     "opera-dist": "cross-env NODE_ENV=production cross-env TARGET=opera gulp dist",
     "opera-watch": "cross-env TARGET=opera gulp watch",
-    "prettier": "prettier --write --arrow-parens always --single-quote --trailing-comma es5 'src/**/*.js'",
+    "prettier": "prettier --write '**'",
     "test": "jest",
     "version": "dot-json manifest.json version $(node -p \"require('./package.json').version\") && git add manifest.json"
   },

@@ -1,0 +1,14 @@
+# exclude everything by default
+*.*
+# exclude these directories
+/build/
+/config/
+/node_modules/
+/res/
+/src/icons/
+/src/images/
+# exclude these files
+LICENSE
+# white-list files we want to process
+!*.js
+!*.md
