@@ -61,7 +61,9 @@ test('utils/dom', () => {
   expect(path(document.querySelector('#el1'))).toEqual('#el1');
   expect(path(document.querySelector('.bar > ul > li'))).toEqual('#el1');
   expect(path(document.querySelector('.bar'))).toEqual('body .foo .bar');
-  expect(path(document.querySelector('.bar > ul > li > a'))).toEqual('#el1 a');
+  expect(path(document.querySelector('.bar > ul > li > a'))).toEqual(
+    '#el1 a[href$="https://example.com/"]'
+  );
   expect(path(document.querySelector('.foo > span'))).toEqual(
     'body .foo .fizz.buzz'
   );
