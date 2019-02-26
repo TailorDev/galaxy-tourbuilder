@@ -52,7 +52,7 @@
     "gulp-zip": "^4.1.0",
     "interactjs": "^1.2.9",
     "jest": "^23.1.0",
-    "js-yaml": "^3.8.4",
+    "js-yaml": "^3.12.2",
     "node-sass": "^4.9.3",
     "preprocessify": "^1.0.1",
     "prettier": "1.15.2",
