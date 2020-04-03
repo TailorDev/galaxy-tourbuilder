@@ -50,7 +50,7 @@
     "gulp-sourcemaps": "^2.6.4",
     "gulp-uglify": "^3.0.0",
     "gulp-zip": "^4.1.0",
-    "interactjs": "^1.2.9",
+    "interactjs": "^1.9.8",
     "jest": "^23.1.0",
     "js-yaml": "^3.8.4",
     "node-sass": "^4.9.3",
