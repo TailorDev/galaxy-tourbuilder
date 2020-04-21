@@ -55,7 +55,7 @@
     "js-yaml": "^3.8.4",
     "node-sass": "^4.9.3",
     "preprocessify": "^1.0.1",
-    "prettier": "1.15.2",
+    "prettier": "2.0.5",
     "request": "^2.88.0",
     "taboverride": "^4.0.3",
     "vinyl-buffer": "^1.0.1",
